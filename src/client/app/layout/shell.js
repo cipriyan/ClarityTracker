@@ -22,11 +22,11 @@
             trail: 100,
             color: '#F58A00'
         };
-
+        $rootScope.user = { isAuthenticated : false, profile : null };
         activate();
 
         function activate() {
-            logSuccess(config.appTitle + ' loaded!', null);
+            //logSuccess(config.appTitle + ' loaded!', null);
             common.activateController([], controllerId);
         }
 

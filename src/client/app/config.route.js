@@ -45,6 +45,16 @@
                         content: '<i class="fa fa-lock"></i> Report'
                     }
                 }
+            }, {
+                url: '/logout',
+                config: {
+                    title: 'login',
+                    templateUrl: 'app/login/login.html',
+                    settings: {
+                        nav: 2,
+                        content: '<i class="fa fa-lock"></i> Logout'
+                    }
+                }
             }
         ];
     }

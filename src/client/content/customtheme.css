@@ -46,12 +46,12 @@ select {
     font-family: "Segoe UI", Arial, Helvetica, sans-serif;
 }
 
-input[type="radio"], input[type="checkbox"] {
+/*input[type="radio"], input[type="checkbox"] {
     margin: 0 0 0 !important;
     margin-right: 5px !important;
     line-height: 23px !important;
     border: 0 !important;
-}
+}*/
 
 .btn {
     background-image: none !important;
@@ -789,6 +789,7 @@ form {
     width: auto;
     background: #fff;
     min-height: 900px;
+    top: 110px;
 }
 
     .mainbar .container {
@@ -1273,6 +1274,7 @@ form {
     }
 
 /* Users ends */
+
 
 
 /*#endregion */

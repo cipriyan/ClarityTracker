@@ -70,15 +70,15 @@ select > option {
     color: black;
 }
 
-input.form-control,
+/*input.form-control,
 select.form-control,
 textarea.form-control {
-    /*width: 205px;*/
+    /*width: 205px;
     display: inline;
     display: block;
     width: 50%;
     max-width: 30em;
-}
+}*/
 
 .widget .padd {
     /*margin-bottom: 0;*/

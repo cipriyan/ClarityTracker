@@ -1,0 +1,12 @@
+<section id="dashboard-view" class="mainbar" data-ng-controller="login as vm">
+    <section class="matter">
+        <div class="container">
+            <span ng-show="vm.isAuthenticated">{{vm.welcome}}</span>
+            <form ng-show="!vm.isAuthenticated" ng-submit="vm.submit()">
+                <input ng-model="vm.user.username" type="text" name="user" placeholder="Associate Id" />
+                <input type="submit" value="Login" />
+            </form>
+            <div>{{vm.error}}</div>            
+        </div>
+    </section>
+</section>

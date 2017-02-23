@@ -1,0 +1,1 @@
+nodemon src/server/server.js --ignore src/client/

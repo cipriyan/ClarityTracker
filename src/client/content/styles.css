@@ -456,11 +456,16 @@ a {
 
 /*#region Responsive */
 
-
+/*Arindam*/
 .mar-l0{
     margin-left: 0;
 }
-
+.uib-button-bar{
+    display: none;
+}
+form .btn{
+    margin : 0;
+}
 @media (max-width: 979px) {
     .sidebar-filler {
         width: 200px;

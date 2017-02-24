@@ -5,8 +5,13 @@
 				<div class="form-group row">
 					<label for="week-of-year" class="col-2 col-form-label">Pick the Week</label>
 					<div class="col-10">
-					   <input class="form-control" type="week" ng-model="timeEntryCtrl.weekOfYear" id="week-of-year" required>
-					</div>
+ 							<p class="input-group">
+          						<input type="text" class="form-control" uib-datepicker-popup ng-model="timeEntryCtrl.weekOfYear" is-open="timeEntryCtrl.calender.opened"  datepicker-options="timeEntryCtrl.dateOptions" close-text="Close" />
+          						<span class="input-group-btn" ng-click="timeEntryCtrl.openCalender()">
+            						<button type="button" class="btn btn-default" ><i class="glyphicon glyphicon-calendar"></i></button>
+          						</span>
+        					</p>
+ 					</div>
 				</div>
 				<div class="form-group row">
 					<label for="project-ID" class="col-2 col-form-label">Project Id</label>

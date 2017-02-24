@@ -27,13 +27,29 @@
                     settings: {
                         nav: 1,
                         content: '<i class="fa fa-dashboard"></i> Dashboard'
-                    }
+                    },
+                    controller : 'dashboard',
+                    controllerAs : 'dashboardCtrl'
+                }
+            }, {
+                url: '/timeEntry',
+                config: {
+                    templateUrl: 'app/TimeEntry/timeEntry.html',
+                    title: 'TimeEntry',
+                    settings: {
+                        nav: 2,
+                        content: '<i class="fa fa-dashboard"></i> TimeEntry'
+                    },
+                    controller : 'timeEntry',
+                    controllerAs : 'timeEntryCtrl'
                 }
             }, {
                 url: '/',
                 config: {
                     templateUrl: 'app/login/login.html',
-                    title: 'login'
+                    title: 'login',
+                    controller : 'login',
+                    controllerAs : 'loginCtrl'
                 }
             }, {
                 url: '/report',
@@ -41,17 +57,19 @@
                     title: 'Report',
                     templateUrl: 'app/report/report.html',
                     settings: {
-                        nav: 2,
+                        nav: 3,
                         content: '<i class="fa fa-lock"></i> Report'
-                    }
+                    },
+                    controller : 'report',
+                    controllerAs : 'reportCtrl'
                 }
             }, {
                 url: '/logout',
                 config: {
-                    title: 'login',
+                    title: 'logout',
                     templateUrl: 'app/login/login.html',
                     settings: {
-                        nav: 2,
+                        nav: 4,
                         content: '<i class="fa fa-lock"></i> Logout'
                     }
                 }

@@ -456,6 +456,11 @@ a {
 
 /*#region Responsive */
 
+
+.mar-l0{
+    margin-left: 0;
+}
+
 @media (max-width: 979px) {
     .sidebar-filler {
         width: 200px;

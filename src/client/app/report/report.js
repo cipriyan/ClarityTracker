@@ -11,9 +11,10 @@
         activate();
 
         function activate() {
-            //var promises = [getAvengerCount(), getAvengersCast()];
+            var promises = [];
             common.activateController(promises, controllerId)
                 .then(function () { log('Activated Dashboard View'); });
         }
+        
     }
 })();

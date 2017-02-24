@@ -788,8 +788,8 @@ form {
     margin-right: 0;
     width: auto;
     background: #fff;
-    min-height: 900px;
-    top: 110px;
+    /*min-height: 900px;*/
+    /*top: 110px;*/
 }
 
     .mainbar .container {

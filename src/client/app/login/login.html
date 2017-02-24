@@ -1,4 +1,4 @@
-<section id="dashboard-view" class="mainbar" data-ng-controller="login as vm" data-ng-if="!user.isAuthenticated" >
+<section id="dashboard-view" class="mainbar"  data-ng-if="!user.isAuthenticated" >
     <section class="matter">
         <div class="container">
             <div class="row">
@@ -8,10 +8,10 @@
                             <h3 class="panel-title">Please Sign In</h3>
                         </div>
                         <div class="panel-body">
-                            <form role="form" ng-submit="vm.submit()">
+                            <form role="form" ng-submit="loginCtrl.submit()">
                                 <fieldset>
                                     <div class="form-group">
-                                        <input ng-model="vm.user.username" class="form-control" type="text" name="user" placeholder="Associate Id" />
+                                        <input ng-model="loginCtrl.user.username" class="form-control" type="text" name="user" placeholder="Associate Id" />
                                     </div>
                                     <div class="checkbox">
                                         <label>
@@ -19,7 +19,7 @@
                                         </label>
                                     </div>
                                     <!-- Change this to a button or input when using this as a form -->
-                                    <button type="submit" class="btn btn-lg btn-primary btn-block">Login</a>
+                                    <button type="submit" class="btn btn-lg btn-primary btn-block">Login</button>
                                 </fieldset>
                             </form>
                         </div>

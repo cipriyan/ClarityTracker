@@ -1,7 +1,10 @@
 logs/*
 !.gitkeep
 node_modules/
+Applications/
 bower_components/
 tmp
 .DS_Store
 .idea
+*.sublime-project
+*.sublime-workspace

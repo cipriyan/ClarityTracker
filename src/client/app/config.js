@@ -12,7 +12,9 @@
 
     var events = {
         controllerActivateSuccess: 'controller.activateSuccess',
-        spinnerToggle: 'spinner.toggle'
+        spinnerToggle: 'spinner.toggle',
+        onLogout: 'app.logout',
+        onLogin: 'app.login',
     };
 
     var config = {
@@ -45,6 +47,8 @@
     app.config(['commonConfigProvider', function (cfg) {
         cfg.config.controllerActivateSuccessEvent = config.events.controllerActivateSuccess;
         cfg.config.spinnerToggleEvent = config.events.spinnerToggle;
+        cfg.config.onLogout = config.events.onLogout;
+        cfg.config.onLogin = config.events.onLogin;
     }]);
     //#endregion
 })();

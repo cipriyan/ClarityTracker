@@ -40,4 +40,6 @@ server.listen(port, function(){
     console.log('env = '+ app.get('env') +
         //'\n__dirname = ' + __dirname  +
         '\nprocess.cwd = ' + process.cwd() );
+    console.log('** DEV **');
+
 });

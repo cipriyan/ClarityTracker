@@ -1,9 +1,10 @@
 (function(routes){
     var app;
-    var jsonfileservice = require('./jsonfileservice.js');
+    //var jsonfileservice = require('./jsonfileservice.js');
     var pkg = require('./../../package.json');
     var apiPath = pkg.paths.api;
     var dataPath = pkg.paths.data;
+    //var trackerService = require('../queries');
 
     routes.init = init;
 
@@ -14,18 +15,15 @@
 
     function configureRoutes(){
         //app.get(apiPath + '/maa', getMaa);
-        app.post(apiPath + '/clarityTrack', clarityTrack);
+        //app.post(apiPath + '/clarityTrack', clarityTrack);
+
+        // router.get('/api/puppies', trackerService.getAllPuppies);
+        // router.get('/api/puppies/:id', trackerService.getSinglePuppy);
+        // router.post('/api/puppies', trackerService.createPuppy);
+        // router.put('/api/puppies/:id', trackerService.updatePuppy);
+        // router.delete('/api/puppies/:id', trackerService.removePuppy);
     }
 
-    // function getMaa (req, res, next){
-    //     var json = jsonfileservice.getJsonFromFile(dataPath + 'maa.json');
-    //     json[0].data.results.forEach(function(character){
-    //         var pos = character.name.indexOf('(MAA)');
-    //         //  console.log(character.name.substr(0, pos-1));
-    //         character.name = character.name.substr(0, pos-1);
-    //     });
-    //     res.send(json);
-    // }
     function clarityTrack (argument) {
         // body...
         //update to DB

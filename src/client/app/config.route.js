@@ -19,19 +19,19 @@
     // Define the routes
     function getRoutes() {
         return [
-            {
-                url: '/dashboard',
-                config: {
-                    templateUrl: 'app/dashboard/dashboard.html',
-                    title: 'dashboard',
-                    settings: {
-                        nav: 1,
-                        content: '<i class="fa fa-dashboard"></i> Dashboard'
-                    },
-                    controller : 'dashboard',
-                    controllerAs : 'dashboardCtrl'
-                }
-            }, {
+             {
+            //     url: '/dashboard',
+            //     config: {
+            //         templateUrl: 'app/dashboard/dashboard.html',
+            //         title: 'dashboard',
+            //         settings: {
+            //             nav: 1,
+            //             content: '<i class="fa fa-dashboard"></i> Dashboard'
+            //         },
+            //         controller : 'dashboard',
+            //         controllerAs : 'dashboardCtrl'
+            //     }
+            // }, {
                 url: '/timeEntry',
                 config: {
                     templateUrl: 'app/TimeEntry/timeEntry.html',
@@ -58,7 +58,7 @@
                     templateUrl: 'app/report/report.html',
                     settings: {
                         nav: 3,
-                        content: '<i class="fa fa-lock"></i> Report'
+                        content: '<i class="fa fa-bar-chart-o"></i> Report'
                     },
                     controller : 'report',
                     controllerAs : 'reportCtrl'
@@ -67,11 +67,11 @@
                 url: '/logout',
                 config: {
                     title: 'logout',
-                    templateUrl: 'app/login/login.html',
                     settings: {
                         nav: 4,
-                        content: '<i class="fa fa-lock"></i> Logout'
-                    }
+                        content: '<i class="fa fa-sign-out"></i> Logout'
+                    },
+                    template : '<div data-ng-controller="logout">'
                 }
             }
         ];

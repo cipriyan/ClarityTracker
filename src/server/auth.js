@@ -6,6 +6,7 @@
     var app;
     var apiPath = pkg.paths.api;
     var secret = 'this is the secret secret secret 12356';
+    var trackerService = require('./tracker');
 
     auth.init = init;
 
@@ -36,26 +37,35 @@
         });
     }
 
-    function postAuth (req, res) {
+    function postAuth (req, res, next) {
         //TODO validate req.body.username and req.body.password
         //if is invalid, return 401
-        // if (!(req.body.username === 'john.papa' && req.body.password === 'secret')) {
-        //     //res.send(401, 'Wrong user or password');
-        //     res.status(401).send('Wrong user or password');
-        //     //chk the DB for associate ID
-        //     return;
-        // }
-
-        var profile = {
-            firstName: 'Cipriyan',
-            lastName: 'Irudhayaraj',
-            id: 7
-        };
-
-        // We are sending the profile inside the token
-        var token = jwt.sign(profile, secret, { expiresInMinutes: 60*5 });
-
-        res.json({ token: token });
+        if (!req.body.username) {
+            res.status(401).send('Associate Id Missing');
+            return;
+        }
+        trackerService.getUserProfile(req.body.username)
+            .then(function (data) {
+                console.log('getUserProfile', data);
+                if(data.FirstName){
+                    // We are sending the profile inside the token
+                    var profile = { 'firstName' : data.FirstName, 'lastName' : data.LastName };
+                    var token = jwt.sign(profile, secret, { expiresInMinutes: 60*5 });
+                    res.status(200)
+                            .json({
+                                status: 'success',
+                                data: data,
+                                message: 'Retrieved User profile',
+                                token: token
+                            });
+                } else {
+                    res.status(404).send('Associate Id does not exists');
+                }
+                
+            })
+            .catch(function (err) {
+                    return next(err);
+            });
     }
 
 })(module.exports);

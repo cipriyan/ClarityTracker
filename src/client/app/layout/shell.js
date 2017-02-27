@@ -3,9 +3,9 @@
 
     var controllerId = 'shell';
     angular.module('app').controller(controllerId,
-        ['$rootScope', 'common', 'config', 'memberService', shell]);
+        ['$rootScope', '$location', 'common', 'config', 'memberService', shell]);
 
-    function shell($rootScope, common, config, memberService) {
+    function shell($rootScope, $location, common, config, memberService) {
         var vm = this;
         var logSuccess = common.logger.success;
         var events = config.events;
@@ -22,13 +22,11 @@
             trail: 100,
             color: '#F58A00'
         };
-        //$rootScope.user = { isAuthenticated : false, profile : null };
         activate();
 
         function activate() {
             //logSuccess(config.appTitle + ' loaded!', null);
             common.activateController([checkProfileExists()], controllerId);
-              
         }
 
         function checkProfileExists () {            
@@ -38,7 +36,10 @@
                             vm.user = {};
                             vm.user.profile = data;
                             vm.user.welcome = 'Welcome ' + data.FirstName + ' ' + data.LastName;
-                            vm.user.isAuthenticated = true;                            
+                            vm.user.isAuthenticated = true;
+                            if($location.$$path === '/'){
+                                $location.path('/timeEntry');
+                            }
                         }
                     });
         }

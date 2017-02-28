@@ -3,15 +3,9 @@
 
     var controllerId = 'shell';
     angular.module('app').controller(controllerId,
-<<<<<<< HEAD
-        ['$rootScope', 'common', 'config','$window', shell]);
-
-    function shell($rootScope, common, config, $window) {
-=======
         ['$rootScope', '$location', 'common', 'config', 'memberService', shell]);
 
     function shell($rootScope, $location, common, config, memberService) {
->>>>>>> 96a3af3a70067ef1490ba2b702d50c2a3d334f16
         var vm = this;
         var logSuccess = common.logger.success;
         var events = config.events;
@@ -28,21 +22,6 @@
             trail: 100,
             color: '#F58A00'
         };
-<<<<<<< HEAD
-
-        if(!$window.sessionStorage.authenticate){
-            $rootScope.user = { isAuthenticated : false, profile : null };
-        }else{
-            $rootScope.user = {
-                isAuthenticated : true,
-                profile : $window.sessionStorage.profile,
-                welcome : $window.sessionStorage.welcome
-            };
-        }
-
-
-=======
->>>>>>> 96a3af3a70067ef1490ba2b702d50c2a3d334f16
         activate();
 
         function activate() {

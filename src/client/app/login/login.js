@@ -27,21 +27,6 @@
         function submit() {
             memberService.authenticate(vm.user)
                 .then(
-<<<<<<< HEAD
-                    function (data, status, headers, config) {
-                        $window.sessionStorage.token = data.data.token;
-                        vm.isAuthenticated = true;
-                        $rootScope.user.isAuthenticated = true;
-                        var encodedProfile = data.data.token.split('.')[1];
-                        var profile = JSON.parse(url_base64_decode(encodedProfile));
-                        $rootScope.user.profile = profile;
-                        $window.sessionStorage.profile = JSON.stringify(profile);
-                        vm.welcome = 'Welcome ' + profile.firstName + ' ' + profile.lastName;
-                        $rootScope.user.welcome = vm.welcome;
-
-                        $window.sessionStorage.authenticate = vm.isAuthenticated;
-                        $window.sessionStorage.welcome = vm.welcome;
-=======
                     function (data) {
                         //$rootScope.user.profile = data;
                         //$rootScope.user.isAuthenticated = true;
@@ -49,7 +34,6 @@
                         //$rootScope.user.welcome = vm.welcome;
                         common.$broadcast(commonConfig.config.onLogin, data)
                         $location.path('/timeEntry');
->>>>>>> 96a3af3a70067ef1490ba2b702d50c2a3d334f16
                     },
                     function (data) {
                         // Handle login errors here

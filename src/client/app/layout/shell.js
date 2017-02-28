@@ -3,9 +3,15 @@
 
     var controllerId = 'shell';
     angular.module('app').controller(controllerId,
+<<<<<<< HEAD
         ['$rootScope', 'common', 'config','$window', shell]);
 
     function shell($rootScope, common, config, $window) {
+=======
+        ['$rootScope', '$location', 'common', 'config', 'memberService', shell]);
+
+    function shell($rootScope, $location, common, config, memberService) {
+>>>>>>> 96a3af3a70067ef1490ba2b702d50c2a3d334f16
         var vm = this;
         var logSuccess = common.logger.success;
         var events = config.events;
@@ -22,6 +28,7 @@
             trail: 100,
             color: '#F58A00'
         };
+<<<<<<< HEAD
 
         if(!$window.sessionStorage.authenticate){
             $rootScope.user = { isAuthenticated : false, profile : null };
@@ -34,13 +41,29 @@
         }
 
 
+=======
+>>>>>>> 96a3af3a70067ef1490ba2b702d50c2a3d334f16
         activate();
 
         function activate() {
             //logSuccess(config.appTitle + ' loaded!', null);
-            common.activateController([], controllerId);
+            common.activateController([checkProfileExists()], controllerId);
         }
 
+        function checkProfileExists () {            
+            return memberService.getUserProfile()
+                    .then(function (data) {
+                        if(data){
+                            vm.user = {};
+                            vm.user.profile = data;
+                            vm.user.welcome = 'Welcome ' + data.FirstName + ' ' + data.LastName;
+                            vm.user.isAuthenticated = true;
+                            if($location.$$path === '/'){
+                                $location.path('/timeEntry');
+                            }
+                        }
+                    });
+        }
         function toggleSpinner(on) { vm.isBusy = on; }
 
         $rootScope.$on('$routeChangeStart',
@@ -55,6 +78,14 @@
 
         $rootScope.$on(events.spinnerToggle,
             function (data) { toggleSpinner(data.show); }
+        );
+
+        $rootScope.$on(events.onLogout,
+            function (data) { vm.user = {}; }
+        );
+
+        $rootScope.$on(events.onLogin,
+            function (data) { checkProfileExists(); }
         );
     }
 })();

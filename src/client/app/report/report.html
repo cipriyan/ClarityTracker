@@ -1,5 +1,67 @@
 <section class="mainbar">
-	<div>
-		Hello Moto
-	</div>
+	<section class="matter">
+		<div class="container">
+			<form role="form">
+				<div class="form-group row">
+					<label for="week-of-year" class="col-2 col-form-label">Pick Starting Week</label>
+					<div class="col-10">
+ 							<p class="input-group">
+          						<input type="text" class="form-control" uib-datepicker-popup ng-model="reportCtrl.startWeek" is-open="reportCtrl.calender1.opened"  datepicker-options="reportCtrl.dateOptions" close-text="Close" ng-click="reportCtrl.calender1.opened = true" required/>
+          						<span class="input-group-btn" ng-click="reportCtrl.openCalender1()">
+            						<button type="button" class="btn btn-default" ><i class="glyphicon glyphicon-calendar"></i></button>
+          						</span>
+        					</p>
+ 					</div>
+				</div>
+				<div class="form-group row">
+					<label for="week-of-year" class="col-2 col-form-label">Pick ending Week</label>
+					<div class="col-10">
+ 							<p class="input-group">
+          						<input type="text" class="form-control" uib-datepicker-popup ng-model="reportCtrl.endWeek" is-open="reportCtrl.calender2.opened"  datepicker-options="reportCtrl.dateOptions" close-text="Close" ng-click="reportCtrl.calender2.opened = true" required/>
+          						<span class="input-group-btn" ng-click="reportCtrl.openCalender2()">
+            						<button type="button" class="btn btn-default" ><i class="glyphicon glyphicon-calendar"></i></button>
+          						</span>
+        					</p>
+ 					</div>
+				</div>
+				<div class="form-group row">
+					<label for="project-ID" class="col-2 col-form-label">Project Id</label>
+					<div class="col-10">
+					   <select class="form-control" ng-model="reportCtrl.projectId" id="project-ID">
+					   		<option value="">All Projects</option>
+					   		<option ng-repeat="project in reportCtrl.projectList">{{project}}</option>
+					   </select>
+					</div>
+				</div>
+				<div class="form-group row">
+					<button type="submit" class="btn btn-lg btn-primary mar-l0" ng-click="reportCtrl.submit()">Show</button>					
+				</div>
+			<form>
+
+			<div ng-if="reportCtrl.showTable" class="reportDiv">
+				<div class="row">
+					<label class="pull-left reportText">Report</label>
+					<button class="btn btn-lg btn-primary mar-l0 pull-right" ng-click="reportCtrl.downloadExcel()">Download</button>	
+				</div>
+				<div class="row mar-t15">
+					<table class="table table-responsive" id="searchResult">
+						<thead>
+	                		<tr>
+	                   			<th ng-repeat="header in reportCtrl.table_headers">{{ header}}</th> 
+	                  		</tr>
+	            		</thead>
+	            		<tbody>
+	            			<tr ng-repeat="emp in reportCtrl.fetchedData">
+	            				<td>{{emp.empId}}</td>
+	            				<td>{{emp.name}}</td>
+	            				<td>{{emp.project}}</td>
+	            				<td>{{emp.allocated}}</td>
+	            				<td>{{emp.actual}}</td>
+	            			</tr>
+	            		</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</section>
 </section>

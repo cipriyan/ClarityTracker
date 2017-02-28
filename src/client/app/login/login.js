@@ -38,6 +38,9 @@
                         $window.sessionStorage.profile = JSON.stringify(profile);
                         vm.welcome = 'Welcome ' + profile.firstName + ' ' + profile.lastName;
                         $rootScope.user.welcome = vm.welcome;
+
+                        $window.sessionStorage.authenticate = vm.isAuthenticated;
+                        $window.sessionStorage.welcome = vm.welcome;
                     },
                     function (data, status, headers, config) {
                         // Erase the token if the user fails to log in

@@ -10,7 +10,7 @@
         vm.submit = submit;
         vm.openCalender = openCalender;
 
-        vm.weekOfYear = new Date();
+        vm.weekOfYear = getSunday(new Date());
         vm.projectId = 'ITPR123456';
         vm.allocatedHrs = 40;
         vm.actualHrs = '';
@@ -31,13 +31,22 @@
             common.activateController(promises, controllerId)
                 .then(function () { log('Please Submit your Clarity Entry'); });
         }
+
         function disabled(data) {
             var date = data.date,
             mode = data.mode;
             return mode === 'day' && !(date.getDay() === 0 );
         }
+
         function openCalender(){
             vm.calender.opened = !vm.calender.opened;
+        }
+
+        function getSunday(d) {
+            d = new Date(d);
+            var day = d.getDay(),
+            diff = d.getDate() - day; 
+            return new Date(d.setDate(diff));
         }
 
         function submit(){

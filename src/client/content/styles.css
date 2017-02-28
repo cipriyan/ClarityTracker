@@ -108,9 +108,9 @@ textarea.form-control {
     margin-left: 4px;
 }
 
-    .btn.btn-notext > i {
-        margin-right: 0;
-    }
+.btn.btn-notext > i {
+    margin-right: 0;
+}
 
 .btn-group{
     margin: .2em;
@@ -466,6 +466,24 @@ a {
 form .btn{
     margin : 0;
 }
+.mar-t15{
+    margin-top: 15px;
+}
+
+.reportText{
+    font-size: 25px;
+    padding: 15px;
+    padding-left: 0px;
+}
+
+.btn-primary{
+    width:200px;
+}
+
+.reportDiv{
+    padding-top: 35px;
+}
+
 @media (max-width: 979px) {
     .sidebar-filler {
         width: 200px;

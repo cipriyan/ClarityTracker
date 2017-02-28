@@ -3,9 +3,9 @@
 
     var controllerId = 'shell';
     angular.module('app').controller(controllerId,
-        ['$rootScope', 'common', 'config', shell]);
+        ['$rootScope', 'common', 'config','$window', shell]);
 
-    function shell($rootScope, common, config) {
+    function shell($rootScope, common, config, $window) {
         var vm = this;
         var logSuccess = common.logger.success;
         var events = config.events;
@@ -22,7 +22,18 @@
             trail: 100,
             color: '#F58A00'
         };
-        $rootScope.user = { isAuthenticated : false, profile : null };
+
+        if(!$window.sessionStorage.authenticate){
+            $rootScope.user = { isAuthenticated : false, profile : null };
+        }else{
+            $rootScope.user = {
+                isAuthenticated : true,
+                profile : $window.sessionStorage.profile,
+                welcome : $window.sessionStorage.welcome
+            };
+        }
+
+
         activate();
 
         function activate() {
@@ -33,7 +44,9 @@
         function toggleSpinner(on) { vm.isBusy = on; }
 
         $rootScope.$on('$routeChangeStart',
-            function (event, next, current) { toggleSpinner(true); }
+            function (event, next, current) { 
+                toggleSpinner(true); 
+            }
         );
 
         $rootScope.$on(events.controllerActivateSuccess,

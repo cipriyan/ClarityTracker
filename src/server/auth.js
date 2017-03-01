@@ -22,6 +22,8 @@
         app.post('/authenticate', postAuth);
         app.post('/timeEntry', postAuth1);
         app.post('/fetchTimeEntry', postAuth2);
+        app.post('/fetchProject', postAuth3);
+
     }
 
     function handleUnauth() {
@@ -102,6 +104,22 @@
             });
     }
 
+    function postAuth3 (req, res, next) {
+
+        trackerService.getProject(req.body)
+            .then(function (data) {
+                    res.status(200)
+                            .json({
+                                status: 'success',
+                                data: data,
+                                message: 'Retrieved your Project Details'
+                            });
+                
+            })
+            .catch(function (err) {
+                    return next(err);
+            });
+    }
 
 
 

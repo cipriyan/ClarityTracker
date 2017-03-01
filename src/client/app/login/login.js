@@ -33,7 +33,9 @@
                         //vm.welcome = 'Welcome ' + data.FirstName + ' ' + data.LastName;
                         //$rootScope.user.welcome = vm.welcome;
                         common.$broadcast(commonConfig.config.onLogin, data)
-                        $location.path('/timeEntry');
+                        if(data.AssociateId){
+                            $location.path('/timeEntry');
+                        }
                     },
                     function (data) {
                         // Handle login errors here

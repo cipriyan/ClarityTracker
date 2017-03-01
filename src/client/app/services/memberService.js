@@ -14,7 +14,8 @@
             getUserProfile: getUserProfile,
             logout: clearUserProfile,
             enterTime : enterTime,
-            fetchTime : fetchTime
+            fetchTime : fetchTime,
+            fetchProject : fetchProject
         };
 
         return service;
@@ -46,6 +47,17 @@
 
         function fetchTime(credential){
             return $http.post('/fetchTimeEntry', credential)
+                .then(function(data, status, headers, config) {
+                        return data.data.data;
+                        console.log('successfully entered',data.data.data);
+                }, function(error){
+                    console.log(error);
+                    return error;
+                });
+        }
+
+        function fetchProject(credential){
+            return $http.post('/fetchProject', credential)
                 .then(function(data, status, headers, config) {
                         return data.data.data;
                         console.log('successfully entered',data.data.data);

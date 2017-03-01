@@ -12,7 +12,7 @@
         vm.select = select;
 
         vm.weekOfYear = getSunday(new Date());
-        vm.projectId = 'ITPR123456';
+        vm.projectId = '';
         vm.allocatedHrs = 40;
         vm.actualHrs = '';
         vm.reasonDiff = '';
@@ -26,11 +26,26 @@
         };
 
         activate();
+        fetchProjectName();
 
         function activate() {
             var promises = [];
             common.activateController(promises, controllerId)
                 .then(function () { log('Please Submit your Clarity Entry'); });
+        }
+
+        function fetchProjectName(){
+            memberService.fetchProject({UserTeamId : Number($window.sessionStorage.UserTeamId)})
+                .then(
+                    function (data) {
+                        // console.log('Successfully updated the data base');
+                        vm.projectId = data.ProjectName;
+                    },
+                    function (data) {
+                        // vm.error = 'Error: Invalid user or password';
+                        // vm.welcome = '';
+                    }
+                );
         }
 
         function disabled(data) {

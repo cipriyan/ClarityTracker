@@ -51,27 +51,45 @@
             });
     }    
 
-    function getAllClTrackers(req, res, next) {
-        var startDate = req.params.startDate;
-        db.any('select * from ClTrackerReq')
-            .then(function (data) {
-                res.status(200)
-                    .json({
-                        status: 'success',
-                        data: data,
-                        message: 'Retrieved ALL Cl Tracker Req'
-                    });
-            })
-            .catch(function (err) {
-                return next(err);
-            })
-            .finally(function () {
-                //pgp.end();
-            });
-    }
+    // function getAllClTrackers(req, res, next) {
+    //     var startDate = req.params.startDate;
+    //     db.any('select * from ClTrackerReq')
+    //         .then(function (data) {
+    //             res.status(200)
+    //                 .json({
+    //                     status: 'success',
+    //                     data: data,
+    //                     message: 'Retrieved ALL Cl Tracker Req'
+    //                 });
+    //         })
+    //         .catch(function (err) {
+    //             return next(err);
+    //         })
+    //         .finally(function () {
+    //             //pgp.end();
+    //         });
+    // }
 
     function getEnteredDate(req, res, next) {
         return db.one('SELECT * FROM public."ClTrackerReq" WHERE "WeekStartDate" = ${weekOfYear} AND "UserTeamId" = ${UserTeamId};',
+                req)
+            .then(function (data) {
+                return data;
+            })
+            .catch(function (err) {
+                if (err instanceof pgp.errors.QueryFileError) {
+                    console.log('err', err);
+                }
+                return err;
+            })
+            .finally(function () {
+                pgp.end();
+            });
+    }
+
+
+    function getProject(req, res, next) {
+        return db.one('SELECT * FROM public."Team",public."UserTeam" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "UserTeam"."Id" = ${UserTeamId};',
                 req)
             .then(function (data) {
                 return data;
@@ -140,7 +158,7 @@
 
     var tracker = {
         getUserProfile: getUserProfile,
-        getAllClTrackers: getAllClTrackers,
+        getProject: getProject,
         getEnteredDate: getEnteredDate,
         enterTimeSheet: enterTimeSheet,
         updateClTracker: updateClTracker,

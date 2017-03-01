@@ -460,12 +460,15 @@ a {
 .mar-l0{
     margin-left: 0;
 }
+.mar-l15{
+    margin-left: 15px;
+}
 .uib-button-bar{
     display: none;
 }
-form .btn{
+/*form .btn{
     margin : 0;
-}
+}*/
 .mar-t15{
     margin-top: 15px;
 }
@@ -482,6 +485,10 @@ form .btn{
 
 .reportDiv{
     padding-top: 35px;
+}
+
+.text-info{
+    color:#777;
 }
 
 @media (max-width: 979px) {

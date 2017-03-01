@@ -1,9 +1,9 @@
 (function () {
     'use strict';
     var controllerId = 'report';
-    angular.module('app').controller(controllerId, ['common', 'datacontext', report]);
+    angular.module('app').controller(controllerId, ['common', 'datacontext','memberService','$window', report]);
 
-    function report(common, datacontext) {
+    function report(common, datacontext, memberService, $window) {
         var log = common.logger.info;
         var vm = this;
         vm.title = 'Report';
@@ -28,28 +28,48 @@
         vm.startWeek = '';
         vm.endWeek = '';
         vm.projectId = '';
-        vm.projectList = ['A','B','C','D'];
+        vm.projectList = [];
 
         vm.showTable = false;
-        vm.table_headers =['EmpID','Name','Project','Allocated Hrs','Actual Hrs'];
-        vm.fetchedData = [
-            {
-                empId : '441296',
-                name : 'Arindam',
-                project : 'ICE',
-                allocated : '40',
-                actual : '40'
-            },
-            {
-                empId : '441297',
-                name : 'Sourav',
-                project : 'Digital',
-                allocated : '40',
-                actual : '40'
-            }
-        ];
+        vm.table_headers =['EmpID','Name','Project','Allocated Hrs','Actual Hrs','Comments'];
+        // vm.fetchedData = [
+        //     {
+        //         empId : '441296',
+        //         name : 'Arindam',
+        //         project : 'ICE',
+        //         allocated : '40',
+        //         actual : '40'
+        //     },
+        //     {
+        //         empId : '441297',
+        //         name : 'Sourav',
+        //         project : 'Digital',
+        //         allocated : '40',
+        //         actual : '40'
+        //     }
+        // ];
+
+        vm.fetchedData = [];
 
         activate();
+
+        fetchProjects();
+
+        function fetchProjects(){
+            memberService.fetchProjects()
+                .then(
+                    function (data) {
+                        var fetData = data.result.rows;
+                        for(var i=0;i<fetData.length;i++){
+                            vm.projectList.push(fetData[i].ProjectName);
+                        }
+                    },
+                    function (data) {
+                        // vm.error = 'Error: Invalid user or password';
+                        // vm.welcome = '';
+                    }
+                );
+        }
 
         function activate() {
             var promises = [];
@@ -80,7 +100,41 @@
             console.log(JSON.stringify(submittedData));
             log('Sow Data');
 
-            vm.showTable = true;
+            memberService.fetchData({projectId : vm.projectId})
+                .then(
+                    function (data) {
+                        // console.log(data.result.rows);
+                        vm.fetchedData = [];
+                        var fetData;
+                        if(data.AssociateId){
+                            fetData = [data];
+
+                        }else{
+                            fetData = data.result.rows;
+                        }
+                        for(var i=0;i<fetData.length;i++){
+
+                            if( ((new Date(fetData[i].WeekStartDate)) >= (new Date(vm.startWeek))) && ((new Date(fetData[i].WeekStartDate)) <= (new Date(vm.endWeek)))){
+                                var singleRow = {};
+                                singleRow.empId = fetData[i].AssociateId;
+                                singleRow.name = fetData[i].FirstName;
+                                singleRow.project = fetData[i].ProjectName;
+                                singleRow.allocated = fetData[i].ExpectedHrs;
+                                singleRow.actual = fetData[i].ActualHrs;
+                                singleRow.Comments = fetData[i].Comments;
+
+                                vm.fetchedData.push(singleRow);
+                            }
+                        }
+                        vm.showTable = true;
+                    },
+                    function (data) {
+                        // vm.error = 'Error: Invalid user or password';
+                        // vm.welcome = '';
+                    }
+                );
+
+
         }
 
         function downloadExcel(){

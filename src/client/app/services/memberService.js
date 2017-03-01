@@ -15,7 +15,9 @@
             logout: clearUserProfile,
             enterTime : enterTime,
             fetchTime : fetchTime,
-            fetchProject : fetchProject
+            fetchProject : fetchProject,
+            fetchProjects : fetchProjects,
+            fetchData : fetchData
         };
 
         return service;
@@ -49,7 +51,6 @@
             return $http.post('/fetchTimeEntry', credential)
                 .then(function(data, status, headers, config) {
                         return data.data.data;
-                        console.log('successfully entered',data.data.data);
                 }, function(error){
                     console.log(error);
                     return error;
@@ -60,7 +61,26 @@
             return $http.post('/fetchProject', credential)
                 .then(function(data, status, headers, config) {
                         return data.data.data;
-                        console.log('successfully entered',data.data.data);
+                }, function(error){
+                    console.log(error);
+                    return error;
+                });
+        }
+
+        function fetchProjects(){
+            return $http.post('/fetchProjects')
+                .then(function(data, status, headers, config) {
+                        return data.data.data;
+                }, function(error){
+                    console.log(error);
+                    return error;
+                });
+        }
+
+        function fetchData(credential){
+            return $http.post('/fetchData', credential)
+                .then(function(data, status, headers, config) {
+                        return data.data.data;
                 }, function(error){
                     console.log(error);
                     return error;

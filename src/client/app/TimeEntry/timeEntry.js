@@ -27,7 +27,8 @@
 
         activate();
         fetchProjectName();
-
+        fetchWeekEntry();
+        
         function activate() {
             var promises = [];
             common.activateController(promises, controllerId)
@@ -65,6 +66,27 @@
             return new Date(d.setDate(diff));
         }
 
+        function fetchWeekEntry(){
+            memberService.fetchTime({weekOfYear : vm.weekOfYear.toDateString(), UserTeamId : $window.sessionStorage.UserTeamId})
+                .then(
+                    function (data) {
+                        if(data.ExpectedHrs){
+                            vm.allocatedHrs = data.ExpectedHrs ;
+                            vm.actualHrs = data.ActualHrs ;
+                            vm.reasonDiff = data.Comments ;
+                        }else{
+                            vm.allocatedHrs = 40 ;
+                            vm.actualHrs = '' ;
+                            vm.reasonDiff = '' ;
+                        }
+                    },
+                    function (data) {
+                        // vm.error = 'Error: Invalid user or password';
+                        // vm.welcome = '';
+                    }
+                );
+        }
+
         function submit(){
             var submittedData = {
                 WeekStartDate : vm.weekOfYear.toDateString(),
@@ -91,24 +113,7 @@
         }
 
         function select(){
-            memberService.fetchTime({weekOfYear : vm.weekOfYear.toDateString(), UserTeamId : $window.sessionStorage.UserTeamId})
-                .then(
-                    function (data) {
-                        if(data.ExpectedHrs){
-                            vm.allocatedHrs = data.ExpectedHrs ;
-                            vm.actualHrs = data.ActualHrs ;
-                            vm.reasonDiff = data.Comments ;
-                        }else{
-                            vm.allocatedHrs = 40 ;
-                            vm.actualHrs = '' ;
-                            vm.reasonDiff = '' ;
-                        }
-                    },
-                    function (data) {
-                        // vm.error = 'Error: Invalid user or password';
-                        // vm.welcome = '';
-                    }
-                );
+            fetchWeekEntry();
         }
 
     }

@@ -122,37 +122,54 @@
             });
     }
 
-    function updateClTracker(req, res, next) {
-        db.none('update ClTrackerReq set name=$1, breed=$2, age=$3, sex=$4 where id=$5', [req.body.name, req.body.breed, parseInt(req.body.age),
-                req.body.sex, parseInt(req.params.id)
-            ])
-            .then(function () {
-                res.status(200)
-                    .json({
-                        status: 'success',
-                        message: 'Updated ClTracker'
-                    });
+    function getProjects(req, res, next) {
+        return db.one('SELECT "Team"."ProjectName" FROM public."Team";')
+            .then(function (data) {
+                // console.log("data : ",data);
+                return data;
             })
             .catch(function (err) {
-                return next(err);
+                if (err instanceof pgp.errors.QueryFileError) {
+                    console.log('err', err);
+                }
+                return err;
+            })
+            .finally(function () {
+                pgp.end();
             });
     }
 
-    function removeClTracker(req, res, next) {
-        var clTrackerId = parseInt(req.params.id);
-        db.result('delete from ClTrackerReq where id = $1', clTrackerId)
-            .then(function (result) {
-                /* jshint ignore:start */
-                res.status(200)
-                    .json({
-                        status: 'success',
-                        message: 'Removed ${result.rowCount} ClTracker'
-                    });
-                /* jshint ignore:end */
+    function getData(req, res, next) {
+        if(req.projectId){
+            return db.one('SELECT "User"."AssociateId","User"."FirstName","Team"."ProjectName","ClTrackerReq"."ExpectedHrs","ClTrackerReq"."ActualHrs","ClTrackerReq"."WeekStartDate","ClTrackerReq"."Comments" FROM public."Team",public."User",public."UserTeam",public."ClTrackerReq" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "User"."Id" = "UserTeam"."UserId" AND "UserTeam"."IsActive" = true AND "ClTrackerReq"."UserTeamId" = "UserTeam"."Id" AND "Team"."ProjectName" = ${projectId};',req)
+            .then(function (data) {
+                return data;
             })
             .catch(function (err) {
-                return next(err);
+                if (err instanceof pgp.errors.QueryFileError) {
+                    console.log('err', err);
+                }
+                return err;
+            })
+            .finally(function () {
+                pgp.end();
             });
+        }else{
+            return db.one('SELECT "User"."AssociateId","User"."FirstName","Team"."ProjectName","ClTrackerReq"."ExpectedHrs","ClTrackerReq"."ActualHrs","ClTrackerReq"."WeekStartDate","ClTrackerReq"."Comments" FROM public."Team",public."User",public."UserTeam",public."ClTrackerReq" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "User"."Id" = "UserTeam"."UserId" AND "UserTeam"."IsActive" = true AND "ClTrackerReq"."UserTeamId" = "UserTeam"."Id";')
+            .then(function (data) {
+                return data;
+            })
+            .catch(function (err) {
+                if (err instanceof pgp.errors.QueryFileError) {
+                    console.log('err', err);
+                }
+                return err;
+            })
+            .finally(function () {
+                pgp.end();
+            });
+        }
+        
     }
 
 
@@ -161,7 +178,7 @@
         getProject: getProject,
         getEnteredDate: getEnteredDate,
         enterTimeSheet: enterTimeSheet,
-        updateClTracker: updateClTracker,
-        removeClTracker: removeClTracker
+        getProjects: getProjects,
+        getData: getData
     };
 module.exports = tracker;

@@ -487,6 +487,10 @@ a {
     padding-top: 35px;
 }
 
+.text-info{
+    color:#777;
+}
+
 @media (max-width: 979px) {
     .sidebar-filler {
         width: 200px;

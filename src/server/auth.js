@@ -23,7 +23,8 @@
         app.post('/timeEntry', postAuth1);
         app.post('/fetchTimeEntry', postAuth2);
         app.post('/fetchProject', postAuth3);
-
+        app.post('/fetchProjects', postAuth4);
+        app.post('/fetchData', postAuth5);
     }
 
     function handleUnauth() {
@@ -88,7 +89,6 @@
 
 
     function postAuth2 (req, res, next) {
-
         trackerService.getEnteredDate(req.body)
             .then(function (data) {
                     res.status(200)
@@ -105,7 +105,6 @@
     }
 
     function postAuth3 (req, res, next) {
-
         trackerService.getProject(req.body)
             .then(function (data) {
                     res.status(200)
@@ -120,7 +119,35 @@
                     return next(err);
             });
     }
-
-
+    function postAuth4 (req, res, next) {
+        trackerService.getProjects(req.body)
+            .then(function (data) {
+                    res.status(200)
+                            .json({
+                                status: 'success',
+                                data: data,
+                                message: 'Retrieved Projects Details'
+                            });
+                
+            })
+            .catch(function (err) {
+                    return next(err);
+            });
+    }
+    function postAuth5 (req, res, next) {
+        trackerService.getData(req.body)
+            .then(function (data) {
+                    res.status(200)
+                            .json({
+                                status: 'success',
+                                data: data,
+                                message: 'Retrieved Projects Details'
+                            });
+                
+            })
+            .catch(function (err) {
+                    return next(err);
+            });
+    }
 
 })(module.exports);

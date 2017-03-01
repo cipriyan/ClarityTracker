@@ -20,11 +20,10 @@
     function configureRoutes(){
         app.get(apiPath + '/restricted', pingRestricted);
         app.post('/authenticate', postAuth);
-        app.post('/timeEntry', postAuth1);
-        app.post('/fetchTimeEntry', postAuth2);
-        app.post('/fetchProject', postAuth3);
-        app.post('/fetchProjects', postAuth4);
-        app.post('/fetchData', postAuth5);
+        app.post('/timeEntry', postTimeEntry);
+        app.post('/fetchTimeEntry', postFetchTimeEntry);
+        app.post('/fetchProjects', postFetchProjects);
+        app.post('/fetchData', postFetchReportData);
     }
 
     function handleUnauth() {
@@ -74,7 +73,7 @@
     }
 
 
-    function postAuth1 (req, res, next) {
+    function postTimeEntry (req, res, next) {
         trackerService.enterTimeSheet(req.body).then(function (data) {
                 res.status(200)
                         .json({
@@ -88,8 +87,8 @@
     }
 
 
-    function postAuth2 (req, res, next) {
-        trackerService.getEnteredDate(req.body)
+    function postFetchTimeEntry (req, res, next) {
+        trackerService.getEnteredTimeSheet(req.body)
             .then(function (data) {
                     res.status(200)
                             .json({
@@ -104,22 +103,8 @@
             });
     }
 
-    function postAuth3 (req, res, next) {
-        trackerService.getProject(req.body)
-            .then(function (data) {
-                    res.status(200)
-                            .json({
-                                status: 'success',
-                                data: data,
-                                message: 'Retrieved your Project Details'
-                            });
-                
-            })
-            .catch(function (err) {
-                    return next(err);
-            });
-    }
-    function postAuth4 (req, res, next) {
+
+    function postFetchProjects (req, res, next) {
         trackerService.getProjects(req.body)
             .then(function (data) {
                     res.status(200)
@@ -134,8 +119,8 @@
                     return next(err);
             });
     }
-    function postAuth5 (req, res, next) {
-        trackerService.getData(req.body)
+    function postFetchReportData (req, res, next) {
+        trackerService.getReportData(req.body)
             .then(function (data) {
                     res.status(200)
                             .json({

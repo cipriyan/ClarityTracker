@@ -18,23 +18,6 @@
     }
     var db = pgp(connectionString);        
 
-    // function getUserProfile (associateId) {
-    //     return db.one(clHelper.sqlPath('data/userQry.sql'), {associateId : associateId})
-    //         .then(function (data) {
-    //             return data;
-    //         })
-    //         .catch(function (err) {
-    //             if (err instanceof pgp.errors.QueryFileError) {
-    //                 // => the error is related to our QueryFile
-    //                 console.log('err', err);
-    //             }
-    //             return err;
-    //         })
-    //         .finally(function () {
-    //             pgp.end();
-    //         });
-    // }
-
     function getUserProfile (associateId) {
         return db.one('SELECT "User"."AssociateId","User"."FirstName","User"."LastName","User"."Email","User"."IsMgr","User"."IsAdmin","User"."IsSuperAdmin","User"."IsActive","Team"."ProjectName","UserTeam"."Id" FROM public."Team",public."User",public."UserTeam" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "User"."Id" = "UserTeam"."UserId" AND "UserTeam"."IsActive" = true AND "User"."AssociateId" = ${associateId};', {associateId : associateId})
             .then(function (data) {
@@ -51,26 +34,7 @@
             });
     }    
 
-    // function getAllClTrackers(req, res, next) {
-    //     var startDate = req.params.startDate;
-    //     db.any('select * from ClTrackerReq')
-    //         .then(function (data) {
-    //             res.status(200)
-    //                 .json({
-    //                     status: 'success',
-    //                     data: data,
-    //                     message: 'Retrieved ALL Cl Tracker Req'
-    //                 });
-    //         })
-    //         .catch(function (err) {
-    //             return next(err);
-    //         })
-    //         .finally(function () {
-    //             //pgp.end();
-    //         });
-    // }
-
-    function getEnteredDate(req, res, next) {
+    function getEnteredTimeSheet(req, res, next) {
         return db.one('SELECT * FROM public."ClTrackerReq" WHERE "WeekStartDate" = ${weekOfYear} AND "UserTeamId" = ${UserTeamId};',
                 req)
             .then(function (data) {
@@ -87,23 +51,6 @@
             });
     }
 
-
-    function getProject(req, res, next) {
-        return db.one('SELECT * FROM public."Team",public."UserTeam" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "UserTeam"."Id" = ${UserTeamId};',
-                req)
-            .then(function (data) {
-                return data;
-            })
-            .catch(function (err) {
-                if (err instanceof pgp.errors.QueryFileError) {
-                    console.log('err', err);
-                }
-                return err;
-            })
-            .finally(function () {
-                pgp.end();
-            });
-    }
 
     function enterTimeSheet(req, res, next) {
         return db.one('INSERT INTO public."ClTrackerReq"("WeekStartDate","ExpectedHrs","ActualHrs","Comments","IsActive","UserTeamId") VALUES (${WeekStartDate},${ExpectedHrs},${ActualHrs},${Comments},${IsActive},${UserTeamId});',
@@ -123,7 +70,7 @@
     }
 
     function getProjects(req, res, next) {
-        return db.one('SELECT "Team"."ProjectName" FROM public."Team";')
+        return db.any('SELECT "Team"."ProjectName" FROM public."Team";')
             .then(function (data) {
                 // console.log("data : ",data);
                 return data;
@@ -139,9 +86,9 @@
             });
     }
 
-    function getData(req, res, next) {
+    function getReportData(req, res, next) {
         if(req.projectId){
-            return db.one('SELECT "User"."AssociateId","User"."FirstName","Team"."ProjectName","ClTrackerReq"."ExpectedHrs","ClTrackerReq"."ActualHrs","ClTrackerReq"."WeekStartDate","ClTrackerReq"."Comments" FROM public."Team",public."User",public."UserTeam",public."ClTrackerReq" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "User"."Id" = "UserTeam"."UserId" AND "UserTeam"."IsActive" = true AND "ClTrackerReq"."UserTeamId" = "UserTeam"."Id" AND "Team"."ProjectName" = ${projectId};',req)
+            return db.any('SELECT "User"."AssociateId","User"."FirstName","Team"."ProjectName","ClTrackerReq"."ExpectedHrs","ClTrackerReq"."ActualHrs","ClTrackerReq"."WeekStartDate","ClTrackerReq"."Comments" FROM public."Team",public."User",public."UserTeam",public."ClTrackerReq" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "User"."Id" = "UserTeam"."UserId" AND "UserTeam"."IsActive" = true AND "ClTrackerReq"."UserTeamId" = "UserTeam"."Id" AND "Team"."ProjectName" = ${projectId};',req)
             .then(function (data) {
                 return data;
             })
@@ -155,7 +102,7 @@
                 pgp.end();
             });
         }else{
-            return db.one('SELECT "User"."AssociateId","User"."FirstName","Team"."ProjectName","ClTrackerReq"."ExpectedHrs","ClTrackerReq"."ActualHrs","ClTrackerReq"."WeekStartDate","ClTrackerReq"."Comments" FROM public."Team",public."User",public."UserTeam",public."ClTrackerReq" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "User"."Id" = "UserTeam"."UserId" AND "UserTeam"."IsActive" = true AND "ClTrackerReq"."UserTeamId" = "UserTeam"."Id";')
+            return db.any('SELECT "User"."AssociateId","User"."FirstName","Team"."ProjectName","ClTrackerReq"."ExpectedHrs","ClTrackerReq"."ActualHrs","ClTrackerReq"."WeekStartDate","ClTrackerReq"."Comments" FROM public."Team",public."User",public."UserTeam",public."ClTrackerReq" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "User"."Id" = "UserTeam"."UserId" AND "UserTeam"."IsActive" = true AND "ClTrackerReq"."UserTeamId" = "UserTeam"."Id";')
             .then(function (data) {
                 return data;
             })
@@ -175,10 +122,9 @@
 
     var tracker = {
         getUserProfile: getUserProfile,
-        getProject: getProject,
-        getEnteredDate: getEnteredDate,
+        getEnteredTimeSheet: getEnteredTimeSheet,
         enterTimeSheet: enterTimeSheet,
         getProjects: getProjects,
-        getData: getData
+        getReportData: getReportData
     };
 module.exports = tracker;

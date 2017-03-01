@@ -1,9 +1,9 @@
 (function () {
     'use strict';
     var controllerId = 'report';
-    angular.module('app').controller(controllerId, ['common', 'datacontext','memberService','$window', report]);
+    angular.module('app').controller(controllerId, ['common', 'datacontext','clarityOperationService','$window', report]);
 
-    function report(common, datacontext, memberService, $window) {
+    function report(common, datacontext, clarityOperationService, $window) {
         var log = common.logger.info;
         var vm = this;
         vm.title = 'Report';
@@ -31,7 +31,7 @@
         vm.projectList = [];
 
         vm.showTable = false;
-        vm.table_headers =['EmpID','Name','Project','Allocated Hrs','Actual Hrs','Comments'];
+        vm.table_headers =['EmpID','Name','Project','WeekStartDate','Allocated Hrs','Actual Hrs','Comments','Hrs Difference'];
         // vm.fetchedData = [
         //     {
         //         empId : '441296',
@@ -53,13 +53,13 @@
 
         activate();
 
-        fetchProjects();
+        // fetchProjects();
 
         function fetchProjects(){
-            memberService.fetchProjects()
+            clarityOperationService.fetchProjects()
                 .then(
                     function (data) {
-                        var fetData = data.result.rows;
+                        var fetData =data;
                         for(var i=0;i<fetData.length;i++){
                             vm.projectList.push(fetData[i].ProjectName);
                         }
@@ -72,7 +72,7 @@
         }
 
         function activate() {
-            var promises = [];
+            var promises = [fetchProjects()];
             common.activateController(promises, controllerId)
                 .then(function () { log('Admin View'); });
         }
@@ -98,20 +98,12 @@
                 projectId : vm.projectId
             };
             console.log(JSON.stringify(submittedData));
-            log('Sow Data');
-
-            memberService.fetchData({projectId : vm.projectId})
+            if((new Date(vm.startWeek)) <= (new Date(vm.endWeek))){
+                clarityOperationService.fetchData({projectId : vm.projectId})
                 .then(
                     function (data) {
-                        // console.log(data.result.rows);
                         vm.fetchedData = [];
-                        var fetData;
-                        if(data.AssociateId){
-                            fetData = [data];
-
-                        }else{
-                            fetData = data.result.rows;
-                        }
+                        var fetData =data;
                         for(var i=0;i<fetData.length;i++){
 
                             if( ((new Date(fetData[i].WeekStartDate)) >= (new Date(vm.startWeek))) && ((new Date(fetData[i].WeekStartDate)) <= (new Date(vm.endWeek)))){
@@ -122,18 +114,26 @@
                                 singleRow.allocated = fetData[i].ExpectedHrs;
                                 singleRow.actual = fetData[i].ActualHrs;
                                 singleRow.Comments = fetData[i].Comments;
+                                singleRow.WeekStartDate = fetData[i].WeekStartDate;
+                                singleRow.hrsDiff = String(fetData[i].ExpectedHrs !== fetData[i].ActualHrs);
 
                                 vm.fetchedData.push(singleRow);
                             }
                         }
-                        vm.showTable = true;
+                        if(vm.fetchedData.length > 0){
+                            vm.showTable = true;
+                        }else{
+                            log('No Data to show');
+                        }
                     },
                     function (data) {
                         // vm.error = 'Error: Invalid user or password';
                         // vm.welcome = '';
                     }
                 );
-
+            }else{
+                log('End Week should be later from start week');
+            }
 
         }
 
@@ -141,7 +141,7 @@
           var content = [];
           content.push(vm.table_headers);
           for (var i=0; i<vm.fetchedData.length; i++) {
-            content.push([vm.fetchedData[i].empId,vm.fetchedData[i].name,vm.fetchedData[i].project,vm.fetchedData[i].allocated,vm.fetchedData[i].actual]);
+            content.push([vm.fetchedData[i].empId,vm.fetchedData[i].name,vm.fetchedData[i].project,vm.fetchedData[i].WeekStartDate,vm.fetchedData[i].allocated,vm.fetchedData[i].actual,vm.fetchedData[i].Comments,vm.fetchedData[i].hrsDiff]);
           }
           if (content && angular.isArray(content)) {
                 var finalVal = cleanUpCSVContent(content) ;
@@ -219,18 +219,6 @@
                     anchor.setAttribute('target', '_blank');
                 }
                 anchor.setAttribute('href', csvUrl);
-
-
-
-
-                // var blob = new Blob([finalVal], { type: fileType + ';' }); 
-                // var csvUrl = URL.createObjectURL(blob);
-
-                // anchor.setAttribute('href', csvUrl);
-                // anchor.setAttribute('download', fileName);
-                // anchor.setAttribute('target','_blank');
-
-
 
                 document.body.appendChild(anchor);
 

@@ -469,6 +469,11 @@ a {
 /*form .btn{
     margin : 0;
 }*/
+
+.btn-sm{
+    margin:0;
+}
+
 .mar-t15{
     margin-top: 15px;
 }

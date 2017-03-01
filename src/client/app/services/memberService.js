@@ -12,12 +12,7 @@
         var service = {
             authenticate: authenticate,
             getUserProfile: getUserProfile,
-            logout: clearUserProfile,
-            enterTime : enterTime,
-            fetchTime : fetchTime,
-            fetchProject : fetchProject,
-            fetchProjects : fetchProjects,
-            fetchData : fetchData
+            logout: clearUserProfile
         };
 
         return service;
@@ -28,60 +23,9 @@
                         $window.localStorage.setItem('associateId', credential.username);
                         $window.sessionStorage.token = data.data.token;
                         $window.sessionStorage.profile = angular.toJson(data.data.data);
-                        $window.sessionStorage.UserTeamId = data.data.data.Id;
                         return data.data.data;
                 }, function(error){
                     clearUserProfile();
-                    console.log(error);
-                    return error;
-                });
-        }
-
-        function enterTime(credential) {
-            return $http.post('/timeEntry', credential)
-                .then(function(data, status, headers, config) {
-                        console.log('successfully entered');
-                }, function(error){
-                    console.log(error);
-                    return error;
-                });
-        }
-
-        function fetchTime(credential){
-            return $http.post('/fetchTimeEntry', credential)
-                .then(function(data, status, headers, config) {
-                        return data.data.data;
-                }, function(error){
-                    console.log(error);
-                    return error;
-                });
-        }
-
-        function fetchProject(credential){
-            return $http.post('/fetchProject', credential)
-                .then(function(data, status, headers, config) {
-                        return data.data.data;
-                }, function(error){
-                    console.log(error);
-                    return error;
-                });
-        }
-
-        function fetchProjects(){
-            return $http.post('/fetchProjects')
-                .then(function(data, status, headers, config) {
-                        return data.data.data;
-                }, function(error){
-                    console.log(error);
-                    return error;
-                });
-        }
-
-        function fetchData(credential){
-            return $http.post('/fetchData', credential)
-                .then(function(data, status, headers, config) {
-                        return data.data.data;
-                }, function(error){
                     console.log(error);
                     return error;
                 });

@@ -1,9 +1,9 @@
 (function () {
     'use strict';
     var controllerId = 'timeEntry';
-    angular.module('app').controller(controllerId, ['common', 'datacontext','memberService','$window', timeEntry]);
+    angular.module('app').controller(controllerId, ['common', 'datacontext','clarityOperationService','$window', timeEntry]);
 
-    function timeEntry(common, datacontext, memberService, $window) {
+    function timeEntry(common, datacontext, clarityOperationService, $window) {
         var log = common.logger.info;
         var vm = this;
         vm.title = 'TimeEntry';
@@ -12,7 +12,8 @@
         vm.select = select;
 
         vm.weekOfYear = getSunday(new Date());
-        vm.projectId = '';
+        var profile = angular.fromJson($window.sessionStorage.profile);
+        vm.projectId = profile.ProjectName;
         vm.allocatedHrs = 40;
         vm.actualHrs = '';
         vm.reasonDiff = '';
@@ -26,27 +27,11 @@
         };
 
         activate();
-        fetchProjectName();
-        fetchWeekEntry();
         
         function activate() {
-            var promises = [];
+            var promises = [fetchWeekEntry()];
             common.activateController(promises, controllerId)
                 .then(function () { log('Please Submit your Clarity Entry'); });
-        }
-
-        function fetchProjectName(){
-            memberService.fetchProject({UserTeamId : Number($window.sessionStorage.UserTeamId)})
-                .then(
-                    function (data) {
-                        // console.log('Successfully updated the data base');
-                        vm.projectId = data.ProjectName;
-                    },
-                    function (data) {
-                        // vm.error = 'Error: Invalid user or password';
-                        // vm.welcome = '';
-                    }
-                );
         }
 
         function disabled(data) {
@@ -67,7 +52,7 @@
         }
 
         function fetchWeekEntry(){
-            memberService.fetchTime({weekOfYear : vm.weekOfYear.toDateString(), UserTeamId : $window.sessionStorage.UserTeamId})
+            clarityOperationService.fetchTime({weekOfYear : vm.weekOfYear.toDateString(), UserTeamId : profile.Id})
                 .then(
                     function (data) {
                         if(data.ExpectedHrs){
@@ -97,10 +82,13 @@
                 UserTeamId : Number($window.sessionStorage.UserTeamId)
             };
 
-            memberService.enterTime(submittedData)
+            clarityOperationService.enterTime(submittedData)
                 .then(
                     function (data) {
                         console.log('Successfully updated the data base');
+                        vm.allocatedHrs = 40 ;
+                        vm.actualHrs = '' ;
+                        vm.reasonDiff = '' ;
                     },
                     function (data) {
                         vm.error = 'Error: Invalid user or password';

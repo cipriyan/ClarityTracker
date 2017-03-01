@@ -18,14 +18,30 @@
     }
     var db = pgp(connectionString);        
 
+    // function getUserProfile (associateId) {
+    //     return db.one(clHelper.sqlPath('data/userQry.sql'), {associateId : associateId})
+    //         .then(function (data) {
+    //             return data;
+    //         })
+    //         .catch(function (err) {
+    //             if (err instanceof pgp.errors.QueryFileError) {
+    //                 // => the error is related to our QueryFile
+    //                 console.log('err', err);
+    //             }
+    //             return err;
+    //         })
+    //         .finally(function () {
+    //             pgp.end();
+    //         });
+    // }
+
     function getUserProfile (associateId) {
-        return db.one(clHelper.sqlPath('data/userQry.sql'), {associateId : associateId})
+        return db.one('SELECT "User"."AssociateId","User"."FirstName","User"."LastName","User"."Email","User"."IsMgr","User"."IsAdmin","User"."IsSuperAdmin","User"."IsActive","Team"."ProjectName","UserTeam"."Id" FROM public."Team",public."User",public."UserTeam" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "User"."Id" = "UserTeam"."UserId" AND "UserTeam"."IsActive" = true AND "User"."AssociateId" = ${associateId};', {associateId : associateId})
             .then(function (data) {
                 return data;
             })
             .catch(function (err) {
                 if (err instanceof pgp.errors.QueryFileError) {
-                    // => the error is related to our QueryFile
                     console.log('err', err);
                 }
                 return err;
@@ -33,7 +49,7 @@
             .finally(function () {
                 pgp.end();
             });
-    }
+    }    
 
     function getAllClTrackers(req, res, next) {
         var startDate = req.params.startDate;
@@ -50,40 +66,41 @@
                 return next(err);
             })
             .finally(function () {
+                //pgp.end();
+            });
+    }
+
+    function getEnteredDate(req, res, next) {
+        return db.one('SELECT * FROM public."ClTrackerReq" WHERE "WeekStartDate" = ${weekOfYear} AND "UserTeamId" = ${UserTeamId};',
+                req)
+            .then(function (data) {
+                return data;
+            })
+            .catch(function (err) {
+                if (err instanceof pgp.errors.QueryFileError) {
+                    console.log('err', err);
+                }
+                return err;
+            })
+            .finally(function () {
                 pgp.end();
             });
     }
 
-    function getClTracker(req, res, next) {
-        var pupID = parseInt(req.params.id);
-        db.one('select * from ClTrackerReq where id = $1', pupID)
+    function enterTimeSheet(req, res, next) {
+        return db.one('INSERT INTO public."ClTrackerReq"("WeekStartDate","ExpectedHrs","ActualHrs","Comments","IsActive","UserTeamId") VALUES (${WeekStartDate},${ExpectedHrs},${ActualHrs},${Comments},${IsActive},${UserTeamId});',
+                req)
             .then(function (data) {
-                res.status(200)
-                    .json({
-                        status: 'success',
-                        data: data,
-                        message: 'Retrieved Cl Tracker Req'
-                    });
+                return data;
             })
             .catch(function (err) {
-                return next(err);
-            });
-    }
-
-    function createClTracker(req, res, next) {
-        req.body.age = parseInt(req.body.age);
-        db.none('insert into ClTrackerReq(name, breed, age, sex)' +
-                'values(${name}, ${breed}, ${age}, ${sex})',
-                req.body)
-            .then(function () {
-                res.status(200)
-                    .json({
-                        status: 'success',
-                        message: 'Inserted one puppy'
-                    });
+                if (err instanceof pgp.errors.QueryFileError) {
+                    console.log('err', err);
+                }
+                return err;
             })
-            .catch(function (err) {
-                return next(err);
+            .finally(function () {
+                pgp.end();
             });
     }
 
@@ -124,8 +141,8 @@
     var tracker = {
         getUserProfile: getUserProfile,
         getAllClTrackers: getAllClTrackers,
-        getClTracker: getClTracker,
-        createClTracker: createClTracker,
+        getEnteredDate: getEnteredDate,
+        enterTimeSheet: enterTimeSheet,
         updateClTracker: updateClTracker,
         removeClTracker: removeClTracker
     };

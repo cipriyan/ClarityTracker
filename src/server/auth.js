@@ -20,6 +20,8 @@
     function configureRoutes(){
         app.get(apiPath + '/restricted', pingRestricted);
         app.post('/authenticate', postAuth);
+        app.post('/timeEntry', postAuth1);
+        app.post('/fetchTimeEntry', postAuth2);
     }
 
     function handleUnauth() {
@@ -67,5 +69,40 @@
                     return next(err);
             });
     }
+
+
+    function postAuth1 (req, res, next) {
+        trackerService.enterTimeSheet(req.body).then(function (data) {
+                res.status(200)
+                        .json({
+                                status: 'success',
+                                message: 'Data Entered Successfully'
+                        });                
+            })
+            .catch(function (err) {
+                    return next(err);
+            });
+    }
+
+
+    function postAuth2 (req, res, next) {
+
+        trackerService.getEnteredDate(req.body)
+            .then(function (data) {
+                    res.status(200)
+                            .json({
+                                status: 'success',
+                                data: data,
+                                message: 'Retrieved User Entered Data'
+                            });
+                
+            })
+            .catch(function (err) {
+                    return next(err);
+            });
+    }
+
+
+
 
 })(module.exports);

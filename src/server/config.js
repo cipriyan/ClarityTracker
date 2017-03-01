@@ -6,14 +6,14 @@ var config = {
             port: 5432,
             database: 'ClarityTracker',
             user: 'postgres',
-            password: 'cvspass1'
+            password: 'password-1'
         },
         dev: {
             host: 'localhost',
             port: 5432,
             database: 'ClarityTracker',
             user: 'postgres',
-            password: 'cvspass1'
+            password: 'password-1'
         }
     }
 };

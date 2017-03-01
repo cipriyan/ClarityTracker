@@ -22,6 +22,7 @@
 --  IsSuperAdmin BOOLEAN,
 --  IsActive BOOLEAN
 -- );
+CREATE SEQUENCE "User_id_seq";
 CREATE TABLE "User"
 (
   "Id" integer NOT NULL DEFAULT nextval('"User_id_seq"'::regclass),
@@ -42,16 +43,17 @@ WITH (
 ALTER TABLE "User"
   OWNER TO postgres;
 
+CREATE SEQUENCE "Team_id_seq";
 CREATE TABLE "Team"
 (
   "Id" integer NOT NULL DEFAULT nextval('"Team_id_seq"'::regclass),
   "ProjectName" character varying NOT NULL,
   "Description" character varying,
   "IsActive" boolean,
-  "UserId" integer NOT NULL,
+  "MgrId" integer NOT NULL,
   CONSTRAINT "Team_pkey" PRIMARY KEY ("Id"),
-  CONSTRAINT "user" FOREIGN KEY ("UserId")
-      REFERENCES "Team" ("Id") MATCH SIMPLE
+  CONSTRAINT "user" FOREIGN KEY ("MgrId")
+      REFERENCES "User" ("Id") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
@@ -67,8 +69,9 @@ ALTER TABLE "Team"
 CREATE INDEX fki_user_fkey
   ON "Team"
   USING btree
-  ("UserId");
+  ("MgrId");
 
+CREATE SEQUENCE "UserTeam_id_seq";
 CREATE TABLE "UserTeam"
 (
   "Id" integer NOT NULL DEFAULT nextval('"UserTeam_id_seq"'::regclass),
@@ -77,10 +80,10 @@ CREATE TABLE "UserTeam"
   "TeamId" integer NOT NULL,
   CONSTRAINT "UserTeam_pkey" PRIMARY KEY ("Id"),
   CONSTRAINT team FOREIGN KEY ("TeamId")
-      REFERENCES "Team" (id) MATCH SIMPLE
+      REFERENCES "Team" ("Id") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT "user" FOREIGN KEY ("UserId")
-      REFERENCES "User" (id) MATCH SIMPLE
+      REFERENCES "User" ("Id") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
@@ -107,6 +110,7 @@ CREATE INDEX fki_user
   USING btree
   ("UserId");
 
+CREATE SEQUENCE "ClTrackerReq_id_seq";
 CREATE TABLE "ClTrackerReq"
 (
   "Id" integer NOT NULL DEFAULT nextval('"ClTrackerReq_id_seq"'::regclass),
@@ -115,14 +119,10 @@ CREATE TABLE "ClTrackerReq"
   "ActualHrs" integer NOT NULL,
   "Comments" character varying,
   "IsActive" boolean,
-  "UserId" integer NOT NULL,
-  "TeamId" integer NOT NULL,
+  "UserTeamId" integer NOT NULL,
   CONSTRAINT "ClTrackerReq_pkey" PRIMARY KEY ("Id"),
-  CONSTRAINT "TeamId" FOREIGN KEY ("TeamId")
-      REFERENCES "Team" ("Id") MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT "UserId" FOREIGN KEY ("UserId")
-      REFERENCES "User" ("Id") MATCH SIMPLE
+  CONSTRAINT "UserTeamId" FOREIGN KEY ("UserTeamId")
+      REFERENCES "UserTeam" ("Id") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (

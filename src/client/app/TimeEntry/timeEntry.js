@@ -1,14 +1,15 @@
 (function () {
     'use strict';
     var controllerId = 'timeEntry';
-    angular.module('app').controller(controllerId, ['common', 'datacontext', timeEntry]);
+    angular.module('app').controller(controllerId, ['common', 'datacontext','memberService','$window', timeEntry]);
 
-    function timeEntry(common, datacontext) {
+    function timeEntry(common, datacontext, memberService, $window) {
         var log = common.logger.info;
         var vm = this;
         vm.title = 'TimeEntry';
         vm.submit = submit;
         vm.openCalender = openCalender;
+        vm.select = select;
 
         vm.weekOfYear = getSunday(new Date());
         vm.projectId = 'ITPR123456';
@@ -51,14 +52,48 @@
 
         function submit(){
             var submittedData = {
-                week : vm.weekOfYear,
-                project : vm.projectId,
-                allocatedHr : vm.allocatedHrs,
-                actualHr : vm.actualHrs,
-                reason : vm.reasonDiff
+                WeekStartDate : vm.weekOfYear.toDateString(),
+                ExpectedHrs : vm.allocatedHrs,
+                ActualHrs : vm.actualHrs,
+                Comments : vm.reasonDiff,
+                IsActive : true,
+                UserTeamId : Number($window.sessionStorage.UserTeamId)
             };
+
+            memberService.enterTime(submittedData)
+                .then(
+                    function (data) {
+                        console.log('Successfully updated the data base');
+                    },
+                    function (data) {
+                        vm.error = 'Error: Invalid user or password';
+                        vm.welcome = '';
+                    }
+                );
+
             console.log(JSON.stringify(submittedData));
             log('Data Submitted Successfully');
+        }
+
+        function select(){
+            memberService.fetchTime({weekOfYear : vm.weekOfYear.toDateString(), UserTeamId : $window.sessionStorage.UserTeamId})
+                .then(
+                    function (data) {
+                        if(data.ExpectedHrs){
+                            vm.allocatedHrs = data.ExpectedHrs ;
+                            vm.actualHrs = data.ActualHrs ;
+                            vm.reasonDiff = data.Comments ;
+                        }else{
+                            vm.allocatedHrs = 40 ;
+                            vm.actualHrs = '' ;
+                            vm.reasonDiff = '' ;
+                        }
+                    },
+                    function (data) {
+                        // vm.error = 'Error: Invalid user or password';
+                        // vm.welcome = '';
+                    }
+                );
         }
 
     }

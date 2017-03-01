@@ -7,7 +7,8 @@ SELECT
   "User"."IsAdmin", 
   "User"."IsSuperAdmin", 
   "User"."IsActive", 
-  "Team"."ProjectName"
+  "Team"."ProjectName",
+  "UserTeam"."Id" as "UserTeamId"
 FROM 
   public."Team", 
   public."User", 

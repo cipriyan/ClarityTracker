@@ -11,17 +11,16 @@
 -- 
 -- COMMENT ON DATABASE "ClarityTracker"
 --   IS 'Clarity Tracker';
--- CREATE TABLE public."User"(
---  Id SERIAL PRIMARY KEY,
---  AssociateId INTEGER NOT NULL,
---  FirstName VARCHAR NOT NULL,
---  LastName VARCHAR NOT NULL,
---  Email VARCHAR,
---  IsMgr BOOLEAN,
---  IsAdmin BOOLEAN,
---  IsSuperAdmin BOOLEAN,
---  IsActive BOOLEAN
--- );
+
+CREATE SEQUENCE "User_id_seq"
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE "User_id_seq"
+  OWNER TO postgres;
+
 CREATE TABLE "User"
 (
   "Id" integer NOT NULL DEFAULT nextval('"User_id_seq"'::regclass),
@@ -42,16 +41,25 @@ WITH (
 ALTER TABLE "User"
   OWNER TO postgres;
 
+CREATE SEQUENCE "Team_id_seq"
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE "Team_id_seq"
+  OWNER TO postgres;
+
 CREATE TABLE "Team"
 (
   "Id" integer NOT NULL DEFAULT nextval('"Team_id_seq"'::regclass),
   "ProjectName" character varying NOT NULL,
   "Description" character varying,
   "IsActive" boolean,
-  "UserId" integer NOT NULL,
+  "UsrMgrId" integer NOT NULL,
   CONSTRAINT "Team_pkey" PRIMARY KEY ("Id"),
-  CONSTRAINT "user" FOREIGN KEY ("UserId")
-      REFERENCES "Team" ("Id") MATCH SIMPLE
+  CONSTRAINT "fk_UsrMgrId" FOREIGN KEY ("UsrMgrId")
+      REFERENCES "User" ("Id") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
@@ -67,8 +75,17 @@ ALTER TABLE "Team"
 CREATE INDEX fki_user_fkey
   ON "Team"
   USING btree
-  ("UserId");
+  ("UsrMgrId");
 
+
+CREATE SEQUENCE "UserTeam_id_seq"
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE "UserTeam_id_seq"
+  OWNER TO postgres;
 CREATE TABLE "UserTeam"
 (
   "Id" integer NOT NULL DEFAULT nextval('"UserTeam_id_seq"'::regclass),
@@ -77,10 +94,10 @@ CREATE TABLE "UserTeam"
   "TeamId" integer NOT NULL,
   CONSTRAINT "UserTeam_pkey" PRIMARY KEY ("Id"),
   CONSTRAINT team FOREIGN KEY ("TeamId")
-      REFERENCES "Team" (id) MATCH SIMPLE
+      REFERENCES "Team" ("Id") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT "user" FOREIGN KEY ("UserId")
-      REFERENCES "User" (id) MATCH SIMPLE
+      REFERENCES "User" ("Id") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
@@ -107,6 +124,14 @@ CREATE INDEX fki_user
   USING btree
   ("UserId");
 
+CREATE SEQUENCE "ClTrackerReq_id_seq"
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE "ClTrackerReq_id_seq"
+  OWNER TO postgres;
 CREATE TABLE "ClTrackerReq"
 (
   "Id" integer NOT NULL DEFAULT nextval('"ClTrackerReq_id_seq"'::regclass),

@@ -10,7 +10,9 @@ var express      = require('express'),
     isDev        = app.get('env') === 'development',
     logger       = require('morgan'),
     port         = process.env.PORT || 7171,
-    routes       = require('./routes');
+    routes       = require('./routes'),
+    pkg = require('./package.json'),
+    apiPath = pkg.paths.api;
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -22,6 +24,8 @@ app.use(errorHandler.init);
 console.log('** DEV **');
 app.use('/', express.static('./src/client'));
 app.use('/', express.static('./'));
+
+//app.all(apiPath+'*', [require('./validateRequest')]);
 
 auth.init(app);
 routes.init(app);

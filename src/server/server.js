@@ -20,6 +20,14 @@ app.use(compress()); // Compress response data with gzip
 app.use(logger('dev')); // logger
 //app.use(fileServer(process.cwd())); // Support static file content
 app.use(cors());          // enable ALL CORS requests
+
+app.use(function(req, res, next) { //enable cross origin request
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+
 app.use(errorHandler.init);
 console.log('** DEV **');
 app.use('/', express.static('./src/client'));

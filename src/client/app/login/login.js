@@ -13,7 +13,7 @@
         vm.isAuthenticated = false;
         vm.message = '';
         vm.submit = submit;
-        vm.user = {username: '', password: ''};
+        vm.user = {username: ''};
         vm.welcome = '';
 
         activate();

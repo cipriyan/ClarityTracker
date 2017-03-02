@@ -79,7 +79,7 @@
                 ActualHrs : vm.actualHrs,
                 Comments : vm.reasonDiff,
                 IsActive : true,
-                UserTeamId : Number($window.sessionStorage.UserTeamId)
+                UserTeamId : profile.Id
             };
 
             clarityOperationService.enterTime(submittedData)

@@ -69,6 +69,23 @@
             });
     }
 
+    function updateTimeSheet(req, res, next) {
+        return db.one('UPDATE public."ClTrackerReq" SET "WeekStartDate"=${WeekStartDate}, "ExpectedHrs"=${ExpectedHrs}, "ActualHrs"=${ActualHrs}, "Comments"=${Comments}, "IsActive"=${IsActive}, "UserTeamId"=${UserTeamId} WHERE "Id"=${Id};',
+                req)
+            .then(function (data) {
+                return data;
+            })
+            .catch(function (err) {
+                if (err instanceof pgp.errors.QueryFileError) {
+                    console.log('err', err);
+                }
+                return err;
+            })
+            .finally(function () {
+                pgp.end();
+            });
+    }
+
     function getProjects(req, res, next) {
         return db.any('SELECT "Team"."ProjectName" FROM public."Team";')
             .then(function (data) {
@@ -125,6 +142,7 @@
         getEnteredTimeSheet: getEnteredTimeSheet,
         enterTimeSheet: enterTimeSheet,
         getProjects: getProjects,
-        getReportData: getReportData
+        getReportData: getReportData,
+        updateTimeSheet: updateTimeSheet
     };
 module.exports = tracker;

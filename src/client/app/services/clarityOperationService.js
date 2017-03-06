@@ -13,7 +13,8 @@
             enterTime : enterTime,
             fetchTime : fetchTime,
             fetchProjects : fetchProjects,
-            fetchData : fetchData
+            fetchData : fetchData,
+            updateTime : updateTime
         };
 
         return service;
@@ -21,7 +22,7 @@
         
 
         function enterTime(credential) {
-            return $http.post('/timeEntry', credential)
+            return $http.post('/api/timeEntry', credential)
                 .then(function(data, status, headers, config) {
                         console.log('successfully entered');
                 }, function(error){
@@ -31,7 +32,17 @@
         }
 
         function fetchTime(credential){
-            return $http.post('/fetchTimeEntry', credential)
+            return $http.post('/api/fetchTimeEntry', credential)
+                .then(function(data, status, headers, config) {
+                        return data.data.data;
+                }, function(error){
+                    console.log(error);
+                    return error;
+                });
+        }
+
+        function updateTime(credential){
+            return $http.post('/api/updateTimeEntry', credential)
                 .then(function(data, status, headers, config) {
                         return data.data.data;
                 }, function(error){
@@ -42,7 +53,7 @@
 
 
         function fetchProjects(){
-            return $http.post('/fetchProjects')
+            return $http.post('/api/fetchProjects')
                 .then(function(data, status, headers, config) {
                         return data.data.data;
                 }, function(error){
@@ -52,7 +63,7 @@
         }
 
         function fetchData(credential){
-            return $http.post('/fetchData', credential)
+            return $http.post('/api/fetchData', credential)
                 .then(function(data, status, headers, config) {
                         return data.data.data;
                 }, function(error){

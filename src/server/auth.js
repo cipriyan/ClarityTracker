@@ -20,10 +20,11 @@
     function configureRoutes(){
         app.get(apiPath + '/restricted', pingRestricted);
         app.post('/authenticate', postAuth);
-        app.post('/timeEntry', postTimeEntry);
-        app.post('/fetchTimeEntry', postFetchTimeEntry);
-        app.post('/fetchProjects', postFetchProjects);
-        app.post('/fetchData', postFetchReportData);
+        app.post(apiPath + '/timeEntry', postTimeEntry);
+        app.post(apiPath + '/fetchTimeEntry', postFetchTimeEntry);
+        app.post(apiPath + '/updateTimeEntry', postUpdateTimeEntry);
+        app.post(apiPath + '/fetchProjects', postFetchProjects);
+        app.post(apiPath + '/fetchData', postFetchReportData);
     }
 
     function handleUnauth() {
@@ -79,6 +80,19 @@
                         .json({
                                 status: 'success',
                                 message: 'Data Entered Successfully'
+                        });                
+            })
+            .catch(function (err) {
+                    return next(err);
+            });
+    }
+
+    function postUpdateTimeEntry (req, res, next) {
+        trackerService.updateTimeSheet(req.body).then(function (data) {
+                res.status(200)
+                        .json({
+                                status: 'success',
+                                message: 'Data Updated Successfully'
                         });                
             })
             .catch(function (err) {

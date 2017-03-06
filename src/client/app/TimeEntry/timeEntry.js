@@ -20,7 +20,7 @@
         vm.calender = {
             opened : false
         };
-        
+        vm.Id = '';
         vm.dateOptions = {
             dateDisabled: disabled,
             showWeeks: false
@@ -59,10 +59,12 @@
                             vm.allocatedHrs = data.ExpectedHrs ;
                             vm.actualHrs = data.ActualHrs ;
                             vm.reasonDiff = data.Comments ;
+                            vm.Id = data.Id;
                         }else{
                             vm.allocatedHrs = 40 ;
                             vm.actualHrs = '' ;
                             vm.reasonDiff = '' ;
+                            vm.Id = '';
                         }
                     },
                     function (data) {
@@ -82,7 +84,9 @@
                 UserTeamId : profile.Id
             };
 
-            clarityOperationService.enterTime(submittedData)
+            if(vm.Id){
+                submittedData.Id = vm.Id; 
+                clarityOperationService.updateTime(submittedData)
                 .then(
                     function (data) {
                         console.log('Successfully updated the data base');
@@ -95,6 +99,21 @@
                         vm.welcome = '';
                     }
                 );
+            }else{
+                clarityOperationService.enterTime(submittedData)
+                .then(
+                    function (data) {
+                        console.log('Successfully Entered into the data base');
+                        vm.allocatedHrs = 40 ;
+                        vm.actualHrs = '' ;
+                        vm.reasonDiff = '' ;
+                    },
+                    function (data) {
+                        vm.error = 'Error: Invalid user or password';
+                        vm.welcome = '';
+                    }
+                );
+            }
 
             console.log(JSON.stringify(submittedData));
             log('Data Submitted Successfully');

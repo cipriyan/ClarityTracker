@@ -91,6 +91,13 @@
             return mode === 'day' && (!(date.getDay() === 0 ) || (date > (new Date())));
         }
 
+        var fetchForm = document.getElementById('dataFetchForm');
+        fetchForm.addEventListener('keydown', function (e) {
+            if (e.keyCode) {
+                e.preventDefault();
+            }
+        }, true);
+
         function submit(){
             var submittedData = {
                 startWeek : vm.startWeek,

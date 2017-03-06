@@ -1,10 +1,10 @@
 (function(routes){
     var app;
     //var jsonfileservice = require('./jsonfileservice.js');
-    var pkg = require('./../../package.json');
+    var pkg = require('./package.json');
     var apiPath = pkg.paths.api;
     var dataPath = pkg.paths.data;
-    //var trackerService = require('../queries');
+    var trackerService = require('./tracker');
 
     routes.init = init;
 
@@ -17,15 +17,17 @@
         //app.get(apiPath + '/maa', getMaa);
         //app.post(apiPath + '/clarityTrack', clarityTrack);
 
-        // router.get('/api/puppies', trackerService.getAllPuppies);
-        // router.get('/api/puppies/:id', trackerService.getSinglePuppy);
-        // router.post('/api/puppies', trackerService.createPuppy);
-        // router.put('/api/puppies/:id', trackerService.updatePuppy);
-        // router.delete('/api/puppies/:id', trackerService.removePuppy);
+        app.post(apiPath + '/timeEntry', trackerService.enterTimeSheet);
+        app.post(apiPath + '/fetchTimeEntry', trackerService.getEnteredTimeSheet);
+        app.post(apiPath + '/updateTimeEntry', trackerService.updateTimeSheet);
+        app.post(apiPath + '/fetchProjects', trackerService.getProjects);
+        app.post(apiPath + '/fetchData', trackerService.getReportData);
     }
 
     function clarityTrack (argument) {
         // body...
         //update to DB
     }
+
+
 })(module.exports);

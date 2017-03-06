@@ -100,8 +100,8 @@
 
         function submit(){
             var submittedData = {
-                startWeek : vm.startWeek,
-                endWeek : vm.endWeek,
+                startWeek : moment(vm.startWeek).format('MM/DD/YYYY'),
+                endWeek : moment(vm.endWeek).format('MM/DD/YYYY'),
                 projectId : vm.projectId
             };
             console.log(JSON.stringify(submittedData));
@@ -130,6 +130,7 @@
                         if(vm.fetchedData.length > 0){
                             vm.showTable = true;
                         }else{
+                            vm.showTable = false;
                             log('No Data to show');
                         }
                     },
@@ -154,7 +155,6 @@
                 var finalVal = cleanUpCSVContent(content) ;
                 downloadFile(finalVal, 'Exported_Table.CSV') ;
           }
-          log('Download new6 successful');
         }
         
 

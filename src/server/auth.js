@@ -20,11 +20,6 @@
     function configureRoutes(){
         app.get(apiPath + '/restricted', pingRestricted);
         app.post('/authenticate', postAuth);
-        app.post(apiPath + '/timeEntry', postTimeEntry);
-        app.post(apiPath + '/fetchTimeEntry', postFetchTimeEntry);
-        app.post(apiPath + '/updateTimeEntry', postUpdateTimeEntry);
-        app.post(apiPath + '/fetchProjects', postFetchProjects);
-        app.post(apiPath + '/fetchData', postFetchReportData);
     }
 
     function handleUnauth() {
@@ -72,81 +67,6 @@
                     return next(err);
             });
     }
-
-
-    function postTimeEntry (req, res, next) {
-        trackerService.enterTimeSheet(req.body).then(function (data) {
-                res.status(200)
-                        .json({
-                                status: 'success',
-                                message: 'Data Entered Successfully'
-                        });                
-            })
-            .catch(function (err) {
-                    return next(err);
-            });
-    }
-
-    function postUpdateTimeEntry (req, res, next) {
-        trackerService.updateTimeSheet(req.body).then(function (data) {
-                res.status(200)
-                        .json({
-                                status: 'success',
-                                message: 'Data Updated Successfully'
-                        });                
-            })
-            .catch(function (err) {
-                    return next(err);
-            });
-    }
-
-
-    function postFetchTimeEntry (req, res, next) {
-        trackerService.getEnteredTimeSheet(req.body)
-            .then(function (data) {
-                    res.status(200)
-                            .json({
-                                status: 'success',
-                                data: data,
-                                message: 'Retrieved User Entered Data'
-                            });
-                
-            })
-            .catch(function (err) {
-                    return next(err);
-            });
-    }
-
-
-    function postFetchProjects (req, res, next) {
-        trackerService.getProjects(req.body)
-            .then(function (data) {
-                    res.status(200)
-                            .json({
-                                status: 'success',
-                                data: data,
-                                message: 'Retrieved Projects Details'
-                            });
-                
-            })
-            .catch(function (err) {
-                    return next(err);
-            });
-    }
-    function postFetchReportData (req, res, next) {
-        trackerService.getReportData(req.body)
-            .then(function (data) {
-                    res.status(200)
-                            .json({
-                                status: 'success',
-                                data: data,
-                                message: 'Retrieved Projects Details'
-                            });
-                
-            })
-            .catch(function (err) {
-                    return next(err);
-            });
-    }
+    
 
 })(module.exports);

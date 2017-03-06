@@ -52,14 +52,14 @@
         }
 
         function fetchWeekEntry(){
-            clarityOperationService.fetchTime({weekOfYear : vm.weekOfYear.toDateString(), UserTeamId : profile.Id})
+            clarityOperationService.fetchTime({weekOfYear : moment(vm.weekOfYear).format('MM/DD/YYYY'), UserTeamId : profile.Id})
                 .then(
                     function (data) {
-                        if(data.ExpectedHrs){
-                            vm.allocatedHrs = data.ExpectedHrs ;
-                            vm.actualHrs = data.ActualHrs ;
-                            vm.reasonDiff = data.Comments ;
-                            vm.Id = data.Id;
+                        if(data[0] && data[0].ExpectedHrs){
+                            vm.allocatedHrs = data[0].ExpectedHrs ;
+                            vm.actualHrs = data[0].ActualHrs ;
+                            vm.reasonDiff = data[0].Comments ;
+                            vm.Id = data[0].Id;
                         }else{
                             vm.allocatedHrs = 40 ;
                             vm.actualHrs = '' ;
@@ -76,7 +76,7 @@
 
         function submit(){
             var submittedData = {
-                WeekStartDate : vm.weekOfYear.toDateString(),
+                WeekStartDate : moment(vm.weekOfYear).format('MM/DD/YYYY'),
                 ExpectedHrs : vm.allocatedHrs,
                 ActualHrs : vm.actualHrs,
                 Comments : vm.reasonDiff,

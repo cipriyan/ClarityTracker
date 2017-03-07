@@ -3,16 +3,25 @@
 
     var controllerId = 'sidebar';
     angular.module('app').controller(controllerId,
-        ['$route', 'routes', sidebar]);
+        ['$route', 'routes','$window', sidebar]);
 
-    function sidebar($route, routes) {
+    function sidebar($route, routes, $window) {
         var vm = this;
 
         vm.isCurrent = isCurrent;
+        vm.isAdmin = false;
 
         activate();
 
-        function activate() { getNavRoutes(); }
+        function activate() { 
+            checkAdmin();
+            getNavRoutes(); 
+        }
+
+        function checkAdmin(){
+            var profile = angular.fromJson($window.sessionStorage.profile);
+            vm.isAdmin = profile.IsAdmin;
+        }
 
         function getNavRoutes() {
             vm.navRoutes = routes.filter(function(r) {

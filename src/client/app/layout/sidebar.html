@@ -7,7 +7,7 @@
         <ul class="navi">
             <li class="nlightblue fade-selection-animation" data-ng-class="vm.isCurrent(r)"
                 data-ng-repeat="r in vm.navRoutes">
-                <a ng-href="#!{{r.url}}" data-ng-bind-html="r.config.settings.content"></a>
+                <a ng-href="#!{{r.url}}" data-ng-bind-html="r.config.settings.content" ng-hide="(r.url === '/report') && !(vm.isAdmin)"></a>
             </li>
         </ul>
     </div>

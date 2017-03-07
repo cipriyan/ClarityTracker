@@ -31,7 +31,9 @@
         function activate() {
             var promises = [fetchWeekEntry()];
             common.activateController(promises, controllerId)
-                .then(function () { log('Please Submit your Clarity Entry'); });
+                .then(function () { 
+                    // log('Please Submit your Clarity Entry'); 
+                });
         }
 
         function disabled(data) {
@@ -90,6 +92,7 @@
                 .then(
                     function (data) {
                         console.log('Successfully updated the data base');
+                        log('Successfully updated for the week');
                         vm.allocatedHrs = 40 ;
                         vm.actualHrs = '' ;
                         vm.reasonDiff = '' ;
@@ -104,6 +107,7 @@
                 .then(
                     function (data) {
                         console.log('Successfully Entered into the data base');
+                        log('Successfully Submitted for the week')
                         vm.allocatedHrs = 40 ;
                         vm.actualHrs = '' ;
                         vm.reasonDiff = '' ;
@@ -116,7 +120,6 @@
             }
 
             console.log(JSON.stringify(submittedData));
-            log('Data Submitted Successfully');
         }
 
         function select(){

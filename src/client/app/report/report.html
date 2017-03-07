@@ -3,8 +3,8 @@
 		<div class="container">
 			<form role="form" no-validate id="dataFetchForm">
 				<div class="form-group row">
-					<label for="week-of-year" class="col-xs-12 col-form-label">Pick Starting Week</label>
-					<div class="col-xs-12 col-lg-6">
+					<label  class="col-xs-12 col-lg-2 col-form-label">Start Week</label>
+					<div class="col-xs-12 col-lg-4">
  							<p class="input-group">
           						<input type="text" class="form-control" uib-datepicker-popup ng-model="reportCtrl.startWeek" is-open="reportCtrl.calender1.opened"  datepicker-options="reportCtrl.dateOptions" close-text="Close" ng-click="reportCtrl.calender1.opened = true" required/>
           						<span class="input-group-btn" ng-click="reportCtrl.openCalender1()">
@@ -12,10 +12,19 @@
           						</span>
         					</p>
  					</div>
+ 					<label  class="hidden-xs visible-lg col-lg-2 col-form-label">End Week</label>
+					<div class="hidden-xs visible-lg col-lg-4">
+ 							<p class="input-group">
+          						<input type="text" class="form-control" uib-datepicker-popup ng-model="reportCtrl.endWeek" is-open="reportCtrl.calender2.opened"  datepicker-options="reportCtrl.dateOptions" close-text="Close" ng-click="reportCtrl.calender2.opened = true" required/>
+          						<span class="input-group-btn" ng-click="reportCtrl.openCalender2()">
+            						<button type="button" class="btn btn-default" ><i class="glyphicon glyphicon-calendar"></i></button>
+          						</span>
+        					</p>
+ 					</div>
 				</div>
-				<div class="form-group row">
-					<label for="week-of-year" class="col-xs-12 col-form-label">Pick ending Week</label>
-					<div class="col-xs-12 col-lg-6">
+				<div class="form-group row hidden-lg">
+					<label  class="col-xs-12 col-form-label">End Week</label>
+					<div class="col-xs-12">
  							<p class="input-group">
           						<input type="text" class="form-control" uib-datepicker-popup ng-model="reportCtrl.endWeek" is-open="reportCtrl.calender2.opened"  datepicker-options="reportCtrl.dateOptions" close-text="Close" ng-click="reportCtrl.calender2.opened = true" required/>
           						<span class="input-group-btn" ng-click="reportCtrl.openCalender2()">
@@ -25,16 +34,19 @@
  					</div>
 				</div>
 				<div class="form-group row">
-					<label for="project-ID" class="col-xs-12 col-form-label">Project Id</label>
-					<div class="col-xs-12 col-lg-6">
+					<label for="project-ID" class="col-xs-12 col-lg-2 col-form-label">Project Name</label>
+					<div class="col-xs-12 col-lg-4">
 					   <select class="form-control" ng-model="reportCtrl.projectId" id="project-ID">
 					   		<option value="">All Projects</option>
 					   		<option ng-repeat="project in reportCtrl.projectList">{{project}}</option>
 					   </select>
 					</div>
+					<div class="hidden-xs visible-lg">
+						<button type="submit" class="btn btn-lg btn-primary mar-l198 " ng-click="reportCtrl.submit()">Show</button>
+					</div>
 				</div>
 				<div class="form-group row">
-					<button type="submit" class="btn btn-lg btn-primary mar-l15" ng-click="reportCtrl.submit()">Show</button>					
+					<button type="submit" class="btn btn-lg btn-primary mar-l15 hidden-lg" ng-click="reportCtrl.submit()">Show</button>
 				</div>
 			<form>
 

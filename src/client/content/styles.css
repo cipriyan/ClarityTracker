@@ -466,6 +466,9 @@ a {
 .uib-button-bar{
     display: none;
 }
+.mar-l198{
+    margin-left: 198px;
+}
 /*form .btn{
     margin : 0;
 }*/
@@ -621,6 +624,12 @@ a {
     h3 {
         font-size: 1.5em !important;
         line-height: 1.2em !important;
+    }
+}
+
+@media (min-width: 1024px){
+    #dataFetchForm label {
+        padding-top: 10px;
     }
 }
 

@@ -3,6 +3,7 @@
         express = require('express'),
         config = require('./config'),
         clHelper = require('./helper'),
+        cont = require('./constant');
         app = express();
 
         var options = {
@@ -19,7 +20,7 @@
     var db = pgp(connectionString);        
 
     function getUserProfile (associateId) {
-        return db.one('SELECT "User"."AssociateId","User"."FirstName","User"."LastName","User"."Email","User"."IsMgr","User"."IsAdmin","User"."IsSuperAdmin","User"."IsActive","Team"."ProjectName","UserTeam"."Id" FROM public."Team",public."User",public."UserTeam" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "User"."Id" = "UserTeam"."UserId" AND "UserTeam"."IsActive" = true AND "User"."AssociateId" = ${associateId};', {associateId : associateId})
+        return db.one(cont.getProfile, {associateId : associateId})
             .then(function (data) {
                 return data;
             })
@@ -35,8 +36,7 @@
     }    
 
     function getEnteredTimeSheet(req, res, next) {
-        return db.any('SELECT * FROM public."ClTrackerReq" WHERE "WeekStartDate" = ${weekOfYear} AND "UserTeamId" = ${UserTeamId};',
-                req.body)
+        return db.any(cont.getEnteredEntry,req.body)
             .then(function (data) {
                 res.status(200)
                             .json({
@@ -57,8 +57,7 @@
     }
 
     function enterTimeSheet(req, res, next) {
-        return db.none('INSERT INTO public."ClTrackerReq"("WeekStartDate","ExpectedHrs","ActualHrs","Comments","IsActive","UserTeamId") VALUES (${WeekStartDate},${ExpectedHrs},${ActualHrs},${Comments},${IsActive},${UserTeamId});',
-                req.body)
+        return db.none(cont.enterEntry,req.body)
             .then(function (data) {
                 res.status(200)
                             .json({
@@ -78,8 +77,7 @@
     }
 
     function updateTimeSheet(req, res, next) {
-        return db.none('UPDATE public."ClTrackerReq" SET "WeekStartDate"=${WeekStartDate}, "ExpectedHrs"=${ExpectedHrs}, "ActualHrs"=${ActualHrs}, "Comments"=${Comments}, "IsActive"=${IsActive}, "UserTeamId"=${UserTeamId} WHERE "Id"=${Id};',
-                req.body)
+        return db.none(cont.updateEnteredEntry,req.body)
             .then(function (data) {
                 res.status(200)
                             .json({
@@ -99,7 +97,7 @@
     }
 
     function getProjects(req, res, next) {
-        return db.any('SELECT "Team"."ProjectName" FROM public."Team";')
+        return db.any(cont.getProjects)
             .then(function (data) {
                 // console.log("data : ",data);
                 res.status(200)
@@ -122,7 +120,7 @@
 
     function getReportData(req, res, next) {
         if(req.body.projectId){
-            return db.any('SELECT "User"."AssociateId","User"."FirstName","Team"."ProjectName","ClTrackerReq"."ExpectedHrs","ClTrackerReq"."ActualHrs","ClTrackerReq"."WeekStartDate","ClTrackerReq"."Comments" FROM public."Team",public."User",public."UserTeam",public."ClTrackerReq" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "User"."Id" = "UserTeam"."UserId" AND "UserTeam"."IsActive" = true AND "ClTrackerReq"."UserTeamId" = "UserTeam"."Id" AND "Team"."ProjectName" = ${projectId};',req.body)
+            return db.any(cont.getReportForSpeProj,req.body)
             .then(function (data) {
                 res.status(200)
                             .json({
@@ -141,7 +139,7 @@
                 pgp.end();
             });
         }else{
-            return db.any('SELECT "User"."AssociateId","User"."FirstName","Team"."ProjectName","ClTrackerReq"."ExpectedHrs","ClTrackerReq"."ActualHrs","ClTrackerReq"."WeekStartDate","ClTrackerReq"."Comments" FROM public."Team",public."User",public."UserTeam",public."ClTrackerReq" WHERE "Team"."Id" = "UserTeam"."TeamId" AND "User"."Id" = "UserTeam"."UserId" AND "UserTeam"."IsActive" = true AND "ClTrackerReq"."UserTeamId" = "UserTeam"."Id";')
+            return db.any(cont.getReportForAllProj)
             .then(function (data) {
                 res.status(200)
                             .json({

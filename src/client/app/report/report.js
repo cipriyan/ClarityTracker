@@ -74,7 +74,9 @@
         function activate() {
             var promises = [fetchProjects()];
             common.activateController(promises, controllerId)
-                .then(function () { log('Admin View'); });
+                .then(function () { 
+                    // log('Admin View'); 
+                });
         }
 
         function openCalender1(){
@@ -140,7 +142,7 @@
                     }
                 );
             }else{
-                log('End Week should be later from start week');
+                log('End Week should be later or equal from start week');
             }
 
         }

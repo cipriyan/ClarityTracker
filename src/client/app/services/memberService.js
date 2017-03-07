@@ -40,8 +40,8 @@
                 var credential = { username : associateId };
                 return authenticate(credential)
             } else {
-                return $q.when(null);
                 $location.path('/logout');
+                return $q.when(null);
             }
         }
 

@@ -1,9 +1,9 @@
 (function () {
     'use strict';
     var controllerId = 'timeEntry';
-    angular.module('app').controller(controllerId, ['common', 'datacontext','clarityOperationService','$window', timeEntry]);
+    angular.module('app').controller(controllerId, ['common', 'datacontext','clarityOperationService','$window','memberService', timeEntry]);
 
-    function timeEntry(common, datacontext, clarityOperationService, $window) {
+    function timeEntry(common, datacontext, clarityOperationService, $window, memberService) {
         var log = common.logger.info;
         var vm = this;
         vm.title = 'TimeEntry';
@@ -13,7 +13,7 @@
 
         vm.weekOfYear = getSunday(new Date());
         var profile = angular.fromJson($window.sessionStorage.profile);
-        vm.projectId = profile.ProjectName;
+        vm.projectId = profile ? profile.ProjectName : '';
         vm.allocatedHrs = 40;
         vm.actualHrs = '';
         vm.reasonDiff = '';
@@ -54,7 +54,11 @@
         }
 
         function fetchWeekEntry(){
-            clarityOperationService.fetchTime({weekOfYear : moment(vm.weekOfYear).format('MM/DD/YYYY'), UserTeamId : profile.Id})
+            if(!profile){
+                log('Unauthorized');
+                memberService.logout();
+            }else{
+                clarityOperationService.fetchTime({weekOfYear : moment(vm.weekOfYear).format('MM/DD/YYYY'), UserTeamId : profile.Id})
                 .then(
                     function (data) {
                         if(data[0] && data[0].ExpectedHrs){
@@ -74,6 +78,8 @@
                         // vm.welcome = '';
                     }
                 );
+            }
+            
         }
 
         function submit(){

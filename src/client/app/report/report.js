@@ -1,9 +1,9 @@
 (function () {
     'use strict';
     var controllerId = 'report';
-    angular.module('app').controller(controllerId, ['common', 'datacontext','clarityOperationService','$window', report]);
+    angular.module('app').controller(controllerId, ['common', 'datacontext','clarityOperationService','$window','memberService', report]);
 
-    function report(common, datacontext, clarityOperationService, $window) {
+    function report(common, datacontext, clarityOperationService, $window, memberService) {
         var log = common.logger.info;
         var vm = this;
         vm.title = 'Report';
@@ -56,7 +56,8 @@
         // fetchProjects();
 
         function fetchProjects(){
-            clarityOperationService.fetchProjects()
+            if(angular.fromJson($window.sessionStorage.profile)){
+                clarityOperationService.fetchProjects()
                 .then(
                     function (data) {
                         var fetData =data;
@@ -69,6 +70,10 @@
                         // vm.welcome = '';
                     }
                 );
+            }else{
+                log('Unauthorized');
+                memberService.logout();
+            }
         }
 
         function activate() {

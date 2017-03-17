@@ -76,7 +76,9 @@ var constant = {
 	'getProjects' : 'SELECT '+
 							'"Team"."ProjectName" '+
 					'FROM '+
-							'public."Team";',
+							'public."Team"'+
+					'WHERE'+
+							'"Team"."IsActive"=true;',
 	'getReportForSpeProj' : 'SELECT '+
 									'"User"."AssociateId",'+
 									'"User"."FirstName",'+

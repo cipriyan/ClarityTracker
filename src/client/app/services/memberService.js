@@ -18,7 +18,7 @@
         return service;
 
         function authenticate(credential) {
-            return $http.post('/authenticate', credential)
+            return $http.post('/api/authenticate', credential)
                 .then(function(data, status, headers, config) {
                         $window.localStorage.setItem('associateId', credential.username);
                         $window.sessionStorage.token = data.data.token;

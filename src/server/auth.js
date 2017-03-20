@@ -12,14 +12,14 @@
 
     function init(_app_){
         app = _app_;
-        app.use(apiPath, expressJwt({secret: secret})); // We are going to protect /api routes with JWT
+      //  app.use(apiPath, expressJwt({secret: secret})); // We are going to protect /api routes with JWT
         handleUnauth();
         configureRoutes();
     }
 
     function configureRoutes(){
         app.get(apiPath + '/restricted', pingRestricted);
-        app.post('/authenticate', postAuth);
+        app.post(apiPath + '/authenticate', postAuth);
     }
 
     function handleUnauth() {
@@ -40,13 +40,15 @@
     function postAuth (req, res, next) {
         //TODO validate req.body.username and req.body.password
         //if is invalid, return 401
+        //console.log(req);
+        console.log(req.body);
         if (!req.body.username) {
             res.status(401).send('Associate Id Missing');
             return;
         }
         trackerService.getUserProfile(req.body.username)
             .then(function (data) {
-                console.log('getUserProfile', data);
+                //console.log('getUserProfile', data);
                 if(data.FirstName){
                     // We are sending the profile inside the token
                     var profile = { 'firstName' : data.FirstName, 'lastName' : data.LastName };
